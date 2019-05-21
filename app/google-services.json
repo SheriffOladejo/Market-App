@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "944679334454",
+    "firebase_url": "https://newmarket-9e755.firebaseio.com",
+    "project_id": "newmarket-9e755",
+    "storage_bucket": "newmarket-9e755.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944679334454:android:bf8319b683b6a71a",
+        "android_client_info": {
+          "package_name": "com.example.newmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944679334454-0rd0ll11dmdju985aqi0dnkulh5s3q28.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.newmarket",
+            "certificate_hash": "4e9f51ca32fbd7b9c993b3173d80460e47164fd5"
+          }
+        },
+        {
+          "client_id": "944679334454-21bie38af4vcv5l371ggc7n2tt10bick.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyKPcAkooFVROQ64p6UGwLvmd0SZBg0gY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944679334454-21bie38af4vcv5l371ggc7n2tt10bick.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
