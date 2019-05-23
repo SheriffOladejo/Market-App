@@ -1,10 +1,14 @@
 package com.example.newmarket;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 
@@ -33,6 +38,7 @@ public class SettingActivity extends AppCompatActivity {
     private CircleImageView profileImageView;
     private EditText fullNameEditText, userPhoneEditText, addressEditText;
     private TextView profileChangeTextBtn, closeTextBtn, saveButton;
+    private Uri mainImageUri = null;
 
     private Uri imageUri;
     private String myUrl = "";
@@ -81,7 +87,8 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checker = "clicked";
-                CropImage.activity(imageUri)
+                CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(1, 1)
                 .start(SettingActivity.this);
             }
@@ -93,10 +100,16 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null){
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            imageUri = result.getUri();
-            profileImageView.setImageURI(imageUri);
+            if(requestCode == RESULT_OK){
+                mainImageUri = result.getUri();
+                profileImageView.setImageURI(mainImageUri);
+            }
+            else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                Exception error = result.getError();
+            }
+
         }
         else{
             Toast.makeText(SettingActivity.this, "Error, try again", Toast.LENGTH_SHORT).show();
@@ -152,6 +165,7 @@ public class SettingActivity extends AppCompatActivity {
                         userMap.put("Profile Image", myUrl);
                         ref.child(LoginActivity.currentOnlineUser.getPhone()).updateChildren(userMap);
                         LoginActivity.currentOnlineUser.setImage(myUrl);
+                        LoginActivity.currentOnlineUser.setPhone(userPhoneEditText.getText().toString());
 
                         progress.dismiss();
                         Toast.makeText(SettingActivity.this, "Account information updated", Toast.LENGTH_SHORT).show();

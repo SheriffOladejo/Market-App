@@ -39,8 +39,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private Uri imageUri;
     private StorageReference productImagesRef;
     private StorageReference filePath;
-    private DatabaseReference productRef, specificProductRef;
+    private DatabaseReference productRef, specificProductRef, vendorProductsRef;
     private ProgressDialog progress;
+    private HashMap<String, Object> productMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images");
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
         specificProductRef = FirebaseDatabase.getInstance().getReference().child(categoryName);
+        vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Admins").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
 
         InputProductImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,42 +114,6 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         productRandomKey = saveCurrentDate + saveCurrentTime;
 
         filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-
-//        if(categoryName.equals("Mobile Phones")){
-//            filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Sport Items")){
-//            filePath = productImagesRef.child("Sport Items").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Beauty")){
-//            filePath = productImagesRef.child("Beauty").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Drugs and Health")){
-//            filePath = productImagesRef.child("Drugs and Health").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Fashion Accessories")){
-//            filePath = productImagesRef.child("Fashion Accessories").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Electronics")){
-//            filePath = productImagesRef.child("Electronics").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Shoes")){
-//            filePath = productImagesRef.child("Shoes").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Books and Stationery")){
-//            filePath = productImagesRef.child("Books and Stationery").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Mobiles")){
-//            filePath = productImagesRef.child("Mobiles").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Edibles")){
-//            filePath = productImagesRef.child("Edibles").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-//        else if(categoryName.equals("Others")){
-//            filePath = productImagesRef.child("Others").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-//        }
-
-
         final UploadTask uploadTask = filePath.putFile(imageUri);
 
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -186,7 +152,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     }
 
     private void saveProductInfoToDatabase() {
-        HashMap<String, Object> productMap = new HashMap<>();
+        productMap = new HashMap<>();
         productMap.put("pid", productRandomKey);
         productMap.put("Date", saveCurrentDate);
         productMap.put("Time", saveCurrentTime);
@@ -201,31 +167,52 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(AdminAddNewProductActivity.this, "Product was added successsfully", Toast.LENGTH_SHORT).show();
+                    uploadToVendor();
                 }
                 else{
                     progress.dismiss();
-                    Toast.makeText(AdminAddNewProductActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
         });
+
+
+
+    }
+
+    private void uploadToVendor(){
+        vendorProductsRef.child(productRandomKey).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    uploadToCategory();
+                }
+                else{
+                    progress.dismiss();
+                    Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        });
+    }
+
+    private void uploadToCategory(){
         specificProductRef.child(productRandomKey).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     progress.dismiss();
+                    Toast.makeText(AdminAddNewProductActivity.this, "Product was added successfully", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class));
-                    Toast.makeText(AdminAddNewProductActivity.this, "Product was added successsfully", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     progress.dismiss();
                     String message = task.getException().toString();
-                    Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again" + message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
 
     private void openGallery() {
@@ -245,3 +232,38 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     }
 
 }
+
+//        if(categoryName.equals("Mobile Phones")){
+//            filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Sport Items")){
+//            filePath = productImagesRef.child("Sport Items").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Beauty")){
+//            filePath = productImagesRef.child("Beauty").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Drugs and Health")){
+//            filePath = productImagesRef.child("Drugs and Health").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Fashion Accessories")){
+//            filePath = productImagesRef.child("Fashion Accessories").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Electronics")){
+//            filePath = productImagesRef.child("Electronics").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Shoes")){
+//            filePath = productImagesRef.child("Shoes").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Books and Stationery")){
+//            filePath = productImagesRef.child("Books and Stationery").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Mobiles")){
+//            filePath = productImagesRef.child("Mobiles").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Edibles")){
+//            filePath = productImagesRef.child("Edibles").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+//        else if(categoryName.equals("Others")){
+//            filePath = productImagesRef.child("Others").child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        }
+

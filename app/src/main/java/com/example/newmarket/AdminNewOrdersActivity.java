@@ -39,64 +39,64 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseRecyclerOptions<AdminOrders> options =
-                new FirebaseRecyclerOptions.Builder<AdminOrders>()
-                .setQuery(ordersRef, AdminOrders.class)
-                .build();
+        new FirebaseRecyclerOptions.Builder<AdminOrders>()
+        .setQuery(ordersRef, AdminOrders.class)
+        .build();
 
         FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder> adapter =
-                new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
-                    @Override
-                    protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
-                        holder.userName.setText("Name: " + model.getName());
-                        holder.userPhoneNumber.setText("Phone: " + model.getPhone());
-                        holder.userTotalPrice.setText("Total Amount: #" + model.getTotal_Amount());
-                        holder.userDateTime.setText("Order at: " + model.getDate() + " " + model.getTime());
-                        holder.userShippingAddress.setText("Shipping Address: " + model.getAddress());
+            new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
+                @Override
+                protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
+                    holder.userName.setText("Name: " + model.getName());
+                    holder.userPhoneNumber.setText("Phone: " + model.getPhone());
+                    holder.userTotalPrice.setText("Total Amount: #" + model.getTotal_Amount());
+                    holder.userDateTime.setText("Order at: " + model.getDate() + " " + model.getTime());
+                    holder.userShippingAddress.setText("Shipping Address: " + model.getAddress());
 
-                        holder.showOrdersbutton.setOnClickListener(new View.OnClickListener() {
+                    holder.showOrdersbutton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        String uID = getRef(position).getKey();
+                        Intent intent = new Intent(AdminNewOrdersActivity.this, AdminUserProductsActivity.class);
+                        intent.putExtra("uid", uID);
+                        startActivity(intent);
+                        }
+                    });
+
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        CharSequence options[] = new CharSequence[]{
+                            "Yes",
+                            "No"
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AdminNewOrdersActivity.this);
+                        builder.setTitle("Has this product been delivered?");
+
+                        builder.setItems(options, new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-                            String uID = getRef(position).getKey();
-                            Intent intent = new Intent(AdminNewOrdersActivity.this, AdminUserProductsActivity.class);
-                            intent.putExtra("uid", uID);
-                            startActivity(intent);
+                            public void onClick(DialogInterface dialog, int which) {
+                            if(which == 0){
+                                String uID = getRef(position).getKey();
+                                removeOrder(uID);
+                            }
+                            else{
+                                finish();
+                            }
                             }
                         });
+                        builder.show();
+                        }
+                    });
+                }
 
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                            CharSequence options[] = new CharSequence[]{
-                                "Yes",
-                                "No"
-                            };
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AdminNewOrdersActivity.this);
-                            builder.setTitle("Has this product been delivered");
-
-                            builder.setItems(options, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                if(which == 0){
-                                    String uID = getRef(position).getKey();
-                                    removeOrder(uID);
-                                }
-                                else{
-                                    finish();
-                                }
-                                }
-                            });
-                            builder.show();
-                            }
-                        });
-                    }
-
-                    @NonNull
-                    @Override
-                    public AdminOrdersViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.orders_layout, viewGroup, false);
-                        return new AdminOrdersViewHolder(view);
-                    }
-                };
+                @NonNull
+                @Override
+                public AdminOrdersViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                    View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.orders_layout, viewGroup, false);
+                    return new AdminOrdersViewHolder(view);
+                }
+            };
         ordersList.setAdapter(adapter);
         adapter.startListening();
     }

@@ -131,19 +131,19 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
+    @Override
+    protected void onStart() {
+        super.onStart();
 //        checkOrderState();
 //        if(state.equals("Order Placed") || state.equals("Order Shipped")){
 //            Toast.makeText(ProductDetailActivity.this, "You can purchase more products once your order is shipped", Toast.LENGTH_LONG).show();
 //        }
 //        else
 //            addingToCartList();
-//    }
+    }
 
-    /*private void checkOrderState(){
-        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference().child("Orders").child(Prevalent.currentOnlineUser.getPhone());
+    private void checkOrderState(){
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference().child("Orders").child(LoginActivity.currentOnlineUser.getPhone());
         orderRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -163,5 +163,5 @@ public class ProductDetailActivity extends AppCompatActivity {
 
             }
         });
-    }*/
+    }
 }

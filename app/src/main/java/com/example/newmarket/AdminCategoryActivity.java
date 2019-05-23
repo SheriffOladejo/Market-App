@@ -18,7 +18,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
     private Button logoutBtn, checkOrders, maintinProducts;
     private RecyclerView recyclerView;
     private String category = "";
-    int images[] = {R.drawable.mobile_phones, R.drawable.laptops, R.drawable.laptops, R.drawable.clothing, R.drawable.shoess, R.drawable.beauty, R.drawable.bags, R.drawable.books, R.drawable.pharmacy, R.drawable.food, R.drawable.electronics, R.drawable.others};
+    private int images[] = {R.drawable.mobile_phones, R.drawable.laptops, R.drawable.laptops, R.drawable.clothing, R.drawable.shoess, R.drawable.beauty, R.drawable.bags, R.drawable.books, R.drawable.pharmacy, R.drawable.food, R.drawable.electronics, R.drawable.others};
     private String items[] = {"Mobile Phones", "Laptops", "Phone/Laptop Accessories", "Clothing", "Shoes", "Beauty Products", "Bags", "Books and Stationery", "Pharmaceuticals", "Food/Drinks", "Electronics", "Others"};
 
 
@@ -57,9 +57,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminCategoryActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                startActivity(new Intent(AdminCategoryActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 finish();
             }
         });
@@ -67,17 +65,14 @@ public class AdminCategoryActivity extends AppCompatActivity {
         maintinProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminMaintainProductsActivity.class);
-                intent.putExtra("Admin", "Admin");
-                startActivity(intent);
+                startActivity(new Intent(AdminCategoryActivity.this, AdminMaintainProductsActivity.class).putExtra("Admin", "Admin"));
             }
         });
 
         checkOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class));
             }
         });
 

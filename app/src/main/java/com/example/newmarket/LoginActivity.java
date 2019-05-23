@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView admin, notAdmin;
     private CheckBox Remember;
     public static Users currentOnlineUser;
+    public static Users currentOnlineVendor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         notAdmin = findViewById(R.id.not_admin);
         Remember = findViewById(R.id.remember);
         currentOnlineUser = new Users();
+        currentOnlineVendor = new Users();
 
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()){
                     String userPassword = dataSnapshot.child("Password").getValue().toString();
                     if(userPassword.equals(password)){
+                        currentOnlineVendor.setEmail(dataSnapshot.child("Email").getValue().toString());
+                        currentOnlineVendor.setFirstname(dataSnapshot.child("Vendor").getValue().toString());
+                        currentOnlineVendor.setPhone(dataSnapshot.child("Phone Number").getValue().toString());
                         progress.dismiss();
                         Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, AdminCategoryActivity.class));

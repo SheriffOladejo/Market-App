@@ -21,7 +21,6 @@
             android:iconTint="@color/white"/>
         <item
             android:id="@+id/become_vendor"
-            android:icon="@drawable/profile"
             android:title="Become a Vendor"
             android:iconTint="@color/white"/>
         <item

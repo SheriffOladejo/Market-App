@@ -29,32 +29,6 @@
                 android:textSize="40dp"
             />
 
-            <EditText
-                android:id="@+id/firstname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:ems="10"
-                android:hint="Firstname"
-                android:inputType="textPersonName"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-            />
-
-            <EditText
-                android:id="@+id/lastname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:ems="10"
-                android:hint="Lastname"
-                android:inputType="textPersonName"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-            />
-
 
             <EditText
                 android:id="@+id/create_email"
@@ -62,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:ems="10"
-                android:hint="Email"
+                android:hint="Company Email"
                 android:inputType="textEmailAddress"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -127,6 +101,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/button_border"
                 android:text="Create Account"
+                android:textColor="@color/white"
                 android:textAllCaps="false" />
         </LinearLayout>
     </ScrollView>

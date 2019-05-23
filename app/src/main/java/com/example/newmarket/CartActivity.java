@@ -35,7 +35,7 @@ public class CartActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private Button nextProcessButton;
-    private TextView textTotalAmount, textMsg1, remove;
+    private TextView textTotalAmount, textMsg1;
     private int overallTotalPrice = 0;
     private String phone = "";
 
@@ -76,7 +76,7 @@ public class CartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        checkOrderState();
+        //checkOrderState();
 
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
 

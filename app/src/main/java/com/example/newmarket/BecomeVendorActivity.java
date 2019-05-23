@@ -24,9 +24,9 @@ import io.paperdb.Paper;
 public class BecomeVendorActivity extends AppCompatActivity {
 
     private Button createAccountButton, Login;
-    private EditText firstname, lastname, nickname, email, password, confirm_password, phone_number, company_name;
+    private EditText email, password, confirm_password, phone_number, company_name;
     private ProgressDialog progress;
-    private String name, phone, mail, surname, pass, confirm_pass, vendor;
+    private String phone, mail, pass, confirm_pass, vendor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +37,6 @@ public class BecomeVendorActivity extends AppCompatActivity {
 
         createAccountButton = findViewById(R.id.signup);
         Login = findViewById(R.id.create_login);
-        firstname = findViewById(R.id.firstname);
-        lastname = findViewById(R.id.lastname);
-        nickname = findViewById(R.id.nickname);
         email = findViewById(R.id.create_email);
         password = findViewById(R.id.create_password);
         confirm_password = findViewById(R.id.create_confirm);
@@ -55,11 +52,9 @@ public class BecomeVendorActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadToDatabase(String name, String surname, final String mail, final String pass, String phone, String company_name) {
+    private void uploadToDatabase(final String mail, final String pass, String phone, String company_name) {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Admins");
         HashMap<String, Object> userData = new HashMap<>();
-        userData.put("Firstname", name);
-        userData.put("Surname", surname);
         userData.put("Email", mail);
         userData.put("Password", pass);
         userData.put("Phone Number", phone);
@@ -92,15 +87,13 @@ public class BecomeVendorActivity extends AppCompatActivity {
     }
 
     private void createAccount(){
-        name = firstname.getText().toString();
-        surname = lastname.getText().toString();
         mail = email.getText().toString();
         pass = password.getText().toString();
         confirm_pass = confirm_password.getText().toString();
         phone = phone_number.getText().toString();
         vendor = company_name.getText().toString();
 
-        if(name.isEmpty() || surname.isEmpty() || mail.isEmpty() || pass.isEmpty() || confirm_pass.isEmpty() || phone.isEmpty()){
+        if(mail.isEmpty() || pass.isEmpty() || confirm_pass.isEmpty() || phone.isEmpty()){
             Toast.makeText(BecomeVendorActivity.this, "All fields should be filled", Toast.LENGTH_SHORT).show();
         }
         else if(!pass.equals(confirm_pass)){
@@ -109,7 +102,7 @@ public class BecomeVendorActivity extends AppCompatActivity {
         }
         else{
             initDialogBox(progress);
-            uploadToDatabase(name, surname, mail, pass, phone, vendor);
+            uploadToDatabase(mail, pass, phone, vendor);
         }
     }
 }

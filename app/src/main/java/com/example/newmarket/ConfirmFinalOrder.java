@@ -36,7 +36,7 @@ public class ConfirmFinalOrder extends AppCompatActivity {
         setContentView(R.layout.activity_confirm_final_order);
 
         Paper.init(this);
-        String userphone = Paper.book().read(Prevalent.UserPhoneKey);
+        String userphone = LoginActivity.currentOnlineUser.getPhone();
         phone = userphone;
 
         totalAmount = getIntent().getStringExtra("Total Price");
