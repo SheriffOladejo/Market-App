@@ -60,7 +60,7 @@ public class BecomeVendorActivity extends AppCompatActivity {
         userData.put("Phone Number", phone);
         userData.put("Vendor", company_name);
 
-        final DatabaseReference userRef = ref.child(phone);
+        final DatabaseReference userRef = ref.child(phone).child("Vendor Details");
 
         userRef.updateChildren(userData).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

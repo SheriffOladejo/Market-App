@@ -75,7 +75,7 @@ public class ConfirmFinalOrder extends AppCompatActivity {
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
         final DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference()
-        .child("Orders")
+        .child("Vendors")
         .child(phone);
 
         HashMap<String, Object> ordersMap = new HashMap<>();

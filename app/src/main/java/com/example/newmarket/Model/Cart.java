@@ -8,23 +8,16 @@ public class Cart {
     private String Discount;
     private String OrderID;
 
-    public String getOrderID() {
-        return OrderID;
-    }
-
-    public void setOrderID(String orderID) {
-        OrderID = orderID;
-    }
-
-    public Cart() {
-    }
-
-    public Cart(String pid, String product_Name, String price, String quantity, String discount) {
+    public Cart(String pid, String product_Name, String price, String quantity, String discount, String orderID) {
         this.pid = pid;
         Product_Name = product_Name;
         Price = price;
         Quantity = quantity;
         Discount = discount;
+        OrderID = orderID;
+    }
+
+    public Cart() {
     }
 
     public String getPid() {
@@ -65,6 +58,14 @@ public class Cart {
 
     public void setDiscount(String discount) {
         Discount = discount;
+    }
+
+    public String getOrderID() {
+        return OrderID;
+    }
+
+    public void setOrderID(String orderID) {
+        OrderID = orderID;
     }
 }
 

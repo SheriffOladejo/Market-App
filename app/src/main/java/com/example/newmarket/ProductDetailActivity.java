@@ -119,7 +119,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 if(dataSnapshot.exists()){
                     Products products = dataSnapshot.getValue(Products.class);
                     productName.setText(MainActivity.convertFirstLetter(products.getProduct_Name()));
-                    productPrice.setText("#" + products.getPrice());
+                    productPrice.setText(products.getPrice());
                     productDescription.setText(MainActivity.convertFirstLetter(products.getDescription()));
                     Picasso.get().load(products.getImage()).into(productImage);
                 }

@@ -56,6 +56,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         progress = new ProgressDialog(this);
         discount = findViewById(R.id.discount);
         categoryName = getIntent().getExtras().get("category").toString();
+        vendor = LoginActivity.currentOnlineVendor.getPhone();
 
         productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images");
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
@@ -166,6 +167,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         productMap.put("Price", Price);
         productMap.put("Product_Name", ProductName);
         productMap.put("Discount", Discount);
+        productMap.put("Vendor", vendor);
 
         productRef.child(productID).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

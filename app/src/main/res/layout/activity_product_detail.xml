@@ -46,8 +46,7 @@
         android:layout_below="@+id/product_description_details"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp"
-        android:background="@drawable/button_border"
-        android:backgroundTint="@color/colorAccent"
+        android:background="@color/colorAccent"
         android:elevation="6dp"
         app:finalNumber="15"
         app:initialNumber="1"
@@ -76,7 +75,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="281dp"
         android:layout_marginEnd="29dp"
-        android:text="#12000" />
+        android:text="12000" />
 
     <Button
         android:id="@+id/button2"
@@ -112,7 +111,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="319dp"
         android:layout_marginEnd="27dp"
-        android:text="#15000" />
+        android:text="15000" />
 
 
 </RelativeLayout>
