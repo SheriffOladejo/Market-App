@@ -46,7 +46,7 @@
         android:layout_below="@+id/product_description_details"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp"
-        android:background="@color/colorAccent"
+        app:backGroundColor="@color/colorAccent"
         android:elevation="6dp"
         app:finalNumber="15"
         app:initialNumber="1"
