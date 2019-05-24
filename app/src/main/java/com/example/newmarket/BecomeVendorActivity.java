@@ -53,7 +53,7 @@ public class BecomeVendorActivity extends AppCompatActivity {
     }
 
     private void uploadToDatabase(final String mail, final String pass, String phone, String company_name) {
-        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Admins");
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Vendors");
         HashMap<String, Object> userData = new HashMap<>();
         userData.put("Email", mail);
         userData.put("Password", pass);

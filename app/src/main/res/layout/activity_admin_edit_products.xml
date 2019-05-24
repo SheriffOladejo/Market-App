@@ -32,7 +32,8 @@
             android:textAlignment="center"
             android:padding="12dp"
             android:layout_margin="5dp"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/brown"
+            android:textColor="@color/brown"
             android:hint="Product Name"
             android:textSize="16dp"
             />
@@ -43,10 +44,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/product_name_edit"
             android:hint="Product Price"
+            android:textColor="@color/brown"
             android:textAlignment="center"
             android:padding="12dp"
             android:layout_margin="5dp"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/brown"
             android:textSize="18dp"
             />
 
@@ -57,8 +59,10 @@
             android:layout_below="@+id/product_price_edit"
             android:padding="12dp"
             android:layout_margin="5dp"
-            android:hint="Product Vendor"
-            android:textColorHint="@color/black"
+            android:textColor="@color/brown"
+            android:hint="Product Description"
+            android:inputType="textMultiLine"
+            android:textColorHint="@color/brown"
             android:textAlignment="center"
             android:textSize="16dp"
             />
@@ -69,7 +73,8 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:text="Apply Changes"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/button_border"
+            android:backgroundTint="@color/colorAccent"
             android:textColor="@color/white"
             android:layout_below="@id/product_description_edit"
             />

@@ -1,7 +1,9 @@
 package com.example.newmarket;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -35,7 +37,6 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -62,14 +63,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CartActivity.class);
-                startActivity(intent);
-            }
-        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.bottom_nav);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,6 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         View headerView = navigationView.getHeaderView(0);
         usernameTextView = headerView.findViewById(R.id.user_profile_name);
+        usernameTextView.setTextColor(getResources().getColor(R.color.brown));
         profileImageView = headerView.findViewById(R.id.user_profile_image);
 
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
@@ -136,6 +130,16 @@ public class MainActivity extends AppCompatActivity
 //        //type = getIntent().getExtras().get("Admin").toString();
     }
 
+    public static String convertFirstLetter(String name){
+        String result = "";
+        String indexZero = name.substring(0, 1);
+        result = indexZero.toUpperCase();
+        for(int x = 1; x < name.length(); x++){
+            result += name.charAt(x);
+        }
+        return result;
+    }
+
     // Search data
     private void firebaseSearch(String searchText){
         Query firebaseSearchQuery = productRef.orderByChild("Product_Name").startAt(searchText).endAt(searchText + "\uf8ff");
@@ -149,7 +153,7 @@ public class MainActivity extends AppCompatActivity
             new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options){
                 @Override
                 protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
-                    holder.textProductName.setText(model.getProduct_Name());
+                    holder.textProductName.setText(convertFirstLetter(model.getProduct_Name()));
                     holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
                     Picasso.get().load(model.getImage()).into(holder.imageView);
 
@@ -306,6 +310,26 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.become_vendor){
             startActivity(new Intent(MainActivity.this, BecomeVendorActivity.class));
+        }
+        else if(id == R.id.rate){
+            try{
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                return true;
+            }catch(ActivityNotFoundException e){
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + "com.android.chrome")));
+                return true;
+            }
+        }
+        else if(id == R.id.share){
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            String shareSubject = "Download the Radical Facts App from PlayStore\n";
+            String shareBody = "\n" + "http://play.google.com/store/apps/details?id="  + getPackageName();
+            intent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+            intent.putExtra(Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(intent, "Share Using"));
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

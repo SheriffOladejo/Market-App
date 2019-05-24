@@ -31,10 +31,10 @@ import java.util.HashMap;
 
 public class AdminAddNewProductActivity extends AppCompatActivity {
 
-    private String categoryName, vendor, downloadImageUrl, Description, productRandomKey, Price, ProductName, saveCurrentDate, saveCurrentTime;
+    private String categoryName, vendor, downloadImageUrl, Description, Discount, productID, Price, ProductName, saveCurrentDate, saveCurrentTime;
     private Button AddNewProductButton;
     private ImageView InputProductImage;
-    private EditText InputProductName, InputProductDesc, InputProductPrice, InputVendor;
+    private EditText InputProductName, InputProductDesc, InputProductPrice, discount;
     private static final int GalleryPick = 1;
     private Uri imageUri;
     private StorageReference productImagesRef;
@@ -54,14 +54,13 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         InputProductPrice = findViewById(R.id.product_price);
         InputProductImage = findViewById(R.id.select_product_image);
         progress = new ProgressDialog(this);
-        InputVendor = findViewById(R.id.vendor);
-
+        discount = findViewById(R.id.discount);
         categoryName = getIntent().getExtras().get("category").toString();
 
         productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images");
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
         specificProductRef = FirebaseDatabase.getInstance().getReference().child(categoryName);
-        vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Admins").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
+        vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
 
         InputProductImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,9 +81,14 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private void validateProductData() {
         Description = InputProductDesc.getText().toString();
         Price = InputProductPrice.getText().toString();
-        ProductName = InputProductName.getText().toString();
-        vendor = InputVendor.getText().toString();
+        ProductName = InputProductName.getText().toString().toLowerCase();
 
+        if(TextUtils.isEmpty(discount.getText().toString())){
+            Discount = "0";
+        }
+        else{
+            Discount = discount.getText().toString();
+        }
         if(imageUri == null){
             Toast.makeText(this, "Product image is mandatory", Toast.LENGTH_SHORT).show();
         }
@@ -111,9 +115,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentTime.format(calendar.getTime());
 
-        productRandomKey = saveCurrentDate + saveCurrentTime;
+        productID = saveCurrentDate + saveCurrentTime;
 
-        filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+        filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productID + ".jpg");
         final UploadTask uploadTask = filePath.putFile(imageUri);
 
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -153,7 +157,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
 
     private void saveProductInfoToDatabase() {
         productMap = new HashMap<>();
-        productMap.put("pid", productRandomKey);
+        productMap.put("pid", productID);
         productMap.put("Date", saveCurrentDate);
         productMap.put("Time", saveCurrentTime);
         productMap.put("Description", Description);
@@ -161,56 +165,54 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         productMap.put("Category", categoryName);
         productMap.put("Price", Price);
         productMap.put("Product_Name", ProductName);
-        productMap.put("Vendor", vendor);
+        productMap.put("Discount", Discount);
 
-        productRef.child(productRandomKey).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        productRef.child(productID).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    uploadToVendor();
-                }
-                else{
-                    progress.dismiss();
-                    Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+            if(task.isSuccessful()){
+                uploadToVendor();
+            }
+            else{
+                progress.dismiss();
+                Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again", Toast.LENGTH_SHORT).show();
+                finish();
+            }
             }
         });
-
-
 
     }
 
     private void uploadToVendor(){
-        vendorProductsRef.child(productRandomKey).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        vendorProductsRef.child(productID).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    uploadToCategory();
-                }
-                else{
-                    progress.dismiss();
-                    Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+            if(task.isSuccessful()){
+                uploadToCategory();
+            }
+            else{
+                progress.dismiss();
+                Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again", Toast.LENGTH_SHORT).show();
+                finish();
+            }
             }
         });
     }
 
     private void uploadToCategory(){
-        specificProductRef.child(productRandomKey).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        specificProductRef.child(productID).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    progress.dismiss();
-                    Toast.makeText(AdminAddNewProductActivity.this, "Product was added successfully", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class));
-                }
-                else{
-                    progress.dismiss();
-                    String message = task.getException().toString();
-                    Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again" + message, Toast.LENGTH_SHORT).show();
-                }
+            if(task.isSuccessful()){
+                progress.dismiss();
+                Toast.makeText(AdminAddNewProductActivity.this, "Product was added successfully", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class));
+            }
+            else{
+                progress.dismiss();
+                String message = task.getException().toString();
+                Toast.makeText(AdminAddNewProductActivity.this, "Error, please try again" + message, Toast.LENGTH_SHORT).show();
+            }
             }
         });
     }

@@ -31,7 +31,6 @@
         <activity android:name=".MobilePhonesActivity" />
         <activity android:name=".BecomeVendorActivity" />
         <activity android:name=".AdminMaintainProductsActivity" />
-        <activity android:name=".SearchProductActivity" />
         <activity android:name=".AdminUserProductsActivity" />
         <activity android:name=".AdminNewOrdersActivity" />
         <activity android:name=".ConfirmFinalOrder" />

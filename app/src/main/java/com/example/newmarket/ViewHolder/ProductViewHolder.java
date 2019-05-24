@@ -10,7 +10,7 @@ import com.example.newmarket.R;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public TextView textProductName, textProductDescription, textProductPrice, vendor;
+    public TextView textProductName, textProductDescription, textProductPrice, vendor, discount;
     public ImageView imageView;
     public ItemClickListener listener;
 

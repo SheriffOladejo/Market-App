@@ -1,7 +1,20 @@
 package com.example.newmarket.Model;
 
 public class Cart {
-    private String pid, Product_Name, Price, Quantity, Discount;
+    private String pid;
+    private String Product_Name;
+    private String Price;
+    private String Quantity;
+    private String Discount;
+    private String OrderID;
+
+    public String getOrderID() {
+        return OrderID;
+    }
+
+    public void setOrderID(String orderID) {
+        OrderID = orderID;
+    }
 
     public Cart() {
     }

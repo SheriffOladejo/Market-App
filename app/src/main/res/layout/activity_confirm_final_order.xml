@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="Please confirm your shipment details"
         android:textSize="18dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/black"
         android:layout_margin="25dp"
         android:textStyle="bold"/>
 
@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text"
+        android:textColor="@color/black"
         android:layout_marginTop="60dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -32,6 +33,7 @@
         android:layout_width="match_parent"
         android:inputType="number"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_below="@id/shipment_name"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
@@ -43,6 +45,7 @@
         android:layout_width="match_parent"
         android:inputType="textPostalAddress"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_below="@id/shipment_phone_number"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
@@ -56,8 +59,9 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
         android:text="Confirm order"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/button_border"
         android:textColor="@color/white"
+        android:backgroundTint="@color/colorAccent"
         android:textSize="20dp"/>
 
     <TextView

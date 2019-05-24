@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFF46530"
+    android:background="@color/colorPrimary"
     tools:context=".LoginActivity">
 
     <ImageView
@@ -25,8 +25,8 @@
         android:hint="Phone Number"
         android:inputType="number"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/brown"
+        android:textColorHint="@color/brown" />
 
     <EditText
         android:id="@+id/login_password"
@@ -37,8 +37,8 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/brown"
+        android:textColorHint="@color/brown" />
 
     <Button
         android:id="@+id/login_button"
@@ -48,6 +48,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:background="@drawable/button_border"
+        android:backgroundTint="@color/colorAccent"
         android:text="Login" />
 
     <com.rey.material.widget.CheckBox
@@ -55,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Remember Me"
-        android:textColor="@color/white"
+        android:textColor="@color/brown"
         android:textSize="16sp"
         />
 
@@ -66,7 +67,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:text="Forgot password?"
-        android:textColor="@android:color/holo_blue_bright"
+        android:textColor="@color/brown"
         android:textSize="16sp" />
 
     <Button
@@ -77,6 +78,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:background="@drawable/button_border"
+        android:backgroundTint="@color/colorAccent"
         android:text="Create new account" />
 
     <LinearLayout
@@ -91,7 +93,7 @@
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:text="Not an Admin?"
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="@color/brown"
             android:textSize="16sp"
             android:visibility="invisible"
             tools:visibility="invisible" />
@@ -103,7 +105,7 @@
             android:layout_marginRight="20dp"
             android:text="I'm a Vendor?"
             android:textAlignment="viewEnd"
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="@color/brown"
             android:textSize="16sp" />
     </LinearLayout>
 

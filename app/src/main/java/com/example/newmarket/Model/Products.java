@@ -1,7 +1,24 @@
 package com.example.newmarket.Model;
 
 public class Products {
-    private String Product_Name, Description, Price, Vendor, Image, Category, pid, Date, Time;
+    private String Product_Name;
+    private String Description;
+    private String Price;
+    private String Vendor;
+    private String Image;
+    private String Category;
+    private String pid;
+    private String Date;
+    private String Time;
+    private String Discount;
+
+    public String getDiscount() {
+        return Discount;
+    }
+
+    public void setDiscount(String discount) {
+        Discount = discount;
+    }
 
     public String getProduct_Name() {
         return Product_Name;

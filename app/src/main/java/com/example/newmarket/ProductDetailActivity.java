@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.example.newmarket.Model.Cart;
 import com.example.newmarket.Model.Products;
 import com.example.newmarket.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,10 +34,11 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Button addToCart;
     private ImageView productImage;
     private ElegantNumberButton numberButton;
-    private TextView productPrice, productName, productDescription;
+    private TextView productPrice, productName, productDescription, discount;
     private String productId = "";
     private String state = "normal";
     private String userPhone = LoginActivity.currentOnlineUser.getPhone();
+    public static Cart currentOrderObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +50,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         productId = getIntent().getStringExtra("pid");
         numberButton = findViewById(R.id.number_btn);
         productImage = findViewById(R.id.product_image_details);
-        productPrice = findViewById(R.id.product_price_details);
+        productPrice = findViewById(R.id.original_price);
         productName = findViewById(R.id.product_name_details);
         productDescription = findViewById(R.id.product_description_details);
         addToCart = findViewById(R.id.product_add_to_cart_btn);
+        discount = findViewById(R.id.discount);
+        currentOrderObject = new Cart();
 
         getProductDetails(productId);
 
@@ -71,42 +75,39 @@ public class ProductDetailActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
-        final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
+        String orderID = saveCurrentTime + saveCurrentDate;
+
+        final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Users");
         final HashMap<String, Object> cartMap = new HashMap<>();
         cartMap.put("pid", productId);
         cartMap.put("Product Name", productName.getText().toString());
         cartMap.put("Price", productPrice.getText().toString());
-        cartMap.put("Date", saveCurrentDate);
-        cartMap.put("Time", saveCurrentTime);
         cartMap.put("Quantity", numberButton.getNumber());
         cartMap.put("Discount", "");
+        currentOrderObject.setOrderID(orderID);
+//        Calendar calendar = Calendar.getInstance();
+//        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+//        saveCurrentDate = currentDate.format(calendar.getTime());
+//
+//        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+//        saveCurrentTime = currentTime.format(calendar.getTime());
 
 
-        cartListRef.child("User View")
-        .child(userPhone).child("Orders").child(productId)
+        cartListRef.child(userPhone)
+        .child("Pending Orders").child(orderID)
         .updateChildren(cartMap)
         .addOnCompleteListener(new OnCompleteListener<Void>() {
         @Override
         public void onComplete(@NonNull Task<Void> task) {
-            if(task.isSuccessful()){
-                cartListRef.child("Admin View")
-                    .child(userPhone).child("Orders").child(productId)
-                    .updateChildren(cartMap)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(ProductDetailActivity.this, "Added to cart", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(ProductDetailActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        }
-                        else{
-                            Toast.makeText(ProductDetailActivity.this, "Error occurred", Toast.LENGTH_SHORT).show();
-                        }
-                        }
-                    });
+                if(task.isSuccessful()){
+                    Toast.makeText(ProductDetailActivity.this, "Added to Bucket", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(ProductDetailActivity.this, "Unable to add to Bucket", Toast.LENGTH_SHORT).show();
+
+                }
             }
-            }
+
         });
     }
 
@@ -117,9 +118,9 @@ public class ProductDetailActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     Products products = dataSnapshot.getValue(Products.class);
-                    productName.setText(products.getProduct_Name());
-                    productPrice.setText(products.getPrice());
-                    productDescription.setText(products.getDescription());
+                    productName.setText(MainActivity.convertFirstLetter(products.getProduct_Name()));
+                    productPrice.setText("#" + products.getPrice());
+                    productDescription.setText(MainActivity.convertFirstLetter(products.getDescription()));
                     Picasso.get().load(products.getImage()).into(productImage);
                 }
             }

@@ -20,13 +20,23 @@
             android:title="Settings"
             android:iconTint="@color/white"/>
         <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout"
+            android:title="Logout" />
+        <item android:id="@+id/share"
+            android:title="Share App"
+            android:icon="@android:drawable/ic_menu_share" />
+        <item android:id="@+id/rate"
+            android:title="Rate us"
+            android:icon="@android:drawable/btn_star_big_on"/>
+        <item
             android:id="@+id/become_vendor"
             android:title="Become a Vendor"
             android:iconTint="@color/white"/>
         <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/logout"
-            android:title="Logout" />
+            android:id="@+id/terms_of_service"
+            android:title="Terms of Service"
+            android:iconTint="@color/white"/>
     </group>
 
 

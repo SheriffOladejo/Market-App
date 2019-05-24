@@ -11,8 +11,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +39,9 @@ public class SettingActivity extends AppCompatActivity {
 
     private CircleImageView profileImageView;
     private EditText fullNameEditText, userPhoneEditText, addressEditText;
-    private TextView profileChangeTextBtn, closeTextBtn, saveButton;
+    private TextView profileChangeTextBtn;
+    private Button saveButton;
+    private Toolbar toolbar;
     private Uri mainImageUri = null;
 
     private Uri imageUri;
@@ -59,17 +63,10 @@ public class SettingActivity extends AppCompatActivity {
         userPhoneEditText = findViewById(R.id.settings_phone_number);
         addressEditText = findViewById(R.id.settings_address);
         profileChangeTextBtn = findViewById(R.id.profile_image_change_btn);
-        closeTextBtn = findViewById(R.id.close_settings_btn);
-        saveButton = findViewById(R.id.update_account_settings_btn);
+        saveButton = findViewById(R.id.settingUpdate);
+
 
         userInfoDisplay(profileImageView, fullNameEditText, userPhoneEditText, addressEditText);
-
-        closeTextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         imageUri = CropImage.getCaptureImageOutputUri(this);
 
         saveButton.setOnClickListener(new View.OnClickListener() {

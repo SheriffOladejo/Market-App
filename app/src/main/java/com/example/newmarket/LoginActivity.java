@@ -12,12 +12,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.newmarket.Model.Users;
 import com.example.newmarket.Prevalent.Prevalent;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.CheckBox;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 
 import io.paperdb.Paper;
 
@@ -27,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button Login ,SignUp;
     private ProgressDialog progress;
     private String parentDbName = "Users";
+    private String rememberTag;
     private TextView admin, notAdmin;
     private CheckBox Remember;
     public static Users currentOnlineUser;

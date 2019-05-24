@@ -78,12 +78,12 @@ public class CartActivity extends AppCompatActivity {
         super.onStart();
         //checkOrderState();
 
-        final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
+        final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         FirebaseRecyclerOptions<Cart> options =
-            new FirebaseRecyclerOptions.Builder<Cart>().setQuery(cartListRef.child("User View")
-                .child(phone)
-                .child("Orders"), Cart.class)
+            new FirebaseRecyclerOptions.Builder<Cart>().setQuery(cartListRef.child(phone)
+                .child("Pending Orders")
+                .child(ProductDetailActivity.currentOrderObject.getOrderID()), Cart.class)
                 .build();
 
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter
@@ -97,16 +97,14 @@ public class CartActivity extends AppCompatActivity {
                 holder.remove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    cartListRef.child("User View")
-                        .child(phone)
-                        .child("Orders")
-                        .child(model.getPid())
+                    cartListRef.child(phone)
+                        .child("Pending Orders")
+                        .child(ProductDetailActivity.currentOrderObject.getOrderID())
                         .removeValue()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(CartActivity.this, "Item removed", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(CartActivity.this, CartActivity.class));
                                 finish();
                             }

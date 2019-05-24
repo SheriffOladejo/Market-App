@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="#FFF46530"
+    android:background="@color/colorPrimary"
     tools:context=".BecomeVendorActivity">
 
     <ScrollView
@@ -25,10 +25,21 @@
                 android:fontFamily="sans-serif-black"
                 android:text="Create Account"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                android:textColor="@color/brown"
                 android:textSize="40dp"
             />
 
+            <EditText
+                android:id="@+id/company_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:ems="10"
+                android:hint="Seller's Name"
+                android:textAlignment="center"
+                android:textColor="@color/brown"
+                android:textColorHint="@color/brown"
+                />
 
             <EditText
                 android:id="@+id/create_email"
@@ -36,37 +47,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:ems="10"
-                android:hint="Company Email"
+                android:hint="Seller's Email"
                 android:inputType="textEmailAddress"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-            />
-
-            <EditText
-                android:id="@+id/create_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-            />
-
-            <EditText
-                android:id="@+id/create_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:ems="10"
-                android:hint="Confirm Password"
-                android:inputType="textPassword"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/brown"
+                android:textColorHint="@color/brown"
             />
 
             <EditText
@@ -78,27 +63,42 @@
                 android:hint="Phone Number"
                 android:inputType="phone"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-            />
+                android:textColor="@color/brown"
+                android:textColorHint="@color/brown"
+                />
 
             <EditText
-                android:id="@+id/company_name"
+                android:id="@+id/create_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:ems="10"
-                android:hint="Company Name"
+                android:hint="Password"
+                android:inputType="textPassword"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                />
+                android:textColor="@color/brown"
+                android:textColorHint="@color/brown"
+            />
+
+            <EditText
+                android:id="@+id/create_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:ems="10"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:textAlignment="center"
+                android:textColor="@color/brown"
+                android:textColorHint="@color/brown"
+            />
 
             <Button
                 android:id="@+id/signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:backgroundTint="@color/colorAccent"
                 android:background="@drawable/button_border"
                 android:text="Create Account"
                 android:textColor="@color/white"
