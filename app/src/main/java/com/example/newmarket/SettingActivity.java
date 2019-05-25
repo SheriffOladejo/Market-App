@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.rey.material.widget.SnackBar;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -144,26 +145,16 @@ public class SettingActivity extends AppCompatActivity {
         progress.setCancelable(false);
         progress.show();
 
-        if(imageUri != null){
+        if (imageUri != null) {
             String phone = LoginActivity.currentOnlineUser.getPhone();
             final StorageReference fileRef = storageProfilePictureRef
-                                             .child(phone + ".jpg");
-            uploadTask = fileRef.putFile(imageUri);
-            uploadTask.continueWithTask(new Continuation() {
+                    .child(phone + ".jpg");
+            uploadTask = fileRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public Object then(@NonNull Task task) throws Exception {
-                    if(!task.isSuccessful()){
-                        throw task.getException();
-                    }
-                    return fileRef.getDownloadUrl();
-                }
-            })
-            .addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if(task.isSuccessful()){
-                        Uri downloadUrl = task.getResult();
-                        myUrl = downloadUrl.toString();
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        String downloadUrl = task.getResult().toString();
+                        myUrl = downloadUrl;
 
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
                         HashMap<String, Object> userMap = new HashMap<>();
@@ -179,15 +170,16 @@ public class SettingActivity extends AppCompatActivity {
                         Toast.makeText(SettingActivity.this, "Account information updated", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SettingActivity.this, MainActivity.class));
                         finish();
-                    }
-                    else
+                    } else
                         progress.dismiss();
-                        Toast.makeText(SettingActivity.this, "Error updating profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingActivity.this, "Error updating profile", Toast.LENGTH_SHORT).show();
                 }
+
             });
         }
-        else
+        else{
             Toast.makeText(SettingActivity.this, "Image is not selected", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void updateOnlyUserInfo() {
