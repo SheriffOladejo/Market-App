@@ -15,7 +15,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
 //    private ImageView shoes, sweaters, femaledresses;
 //    private ImageView purses, mobiles, headphones, watches;
 
-    private Button logoutBtn, checkOrders, maintinProducts;
+    //private Button logoutBtn, checkOrders, maintinProducts;
     private RecyclerView recyclerView;
     private String category = "";
     private int images[] = {R.drawable.mobile_phones, R.drawable.laptops, R.drawable.laptops, R.drawable.clothing, R.drawable.shoess, R.drawable.beauty, R.drawable.bags, R.drawable.books, R.drawable.pharmacy, R.drawable.food, R.drawable.electronics, R.drawable.others};
@@ -31,6 +31,9 @@ public class AdminCategoryActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         category = intent.getStringExtra("category");
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new AdminCategoryAdapter(this, items, images));
+
 //        tshirts = findViewById(R.id.t_shirts);
 //        sportTshirts = findViewById(R.id.sport_shirts);
 //        glasses = findViewById(R.id.glasses);
@@ -39,42 +42,42 @@ public class AdminCategoryActivity extends AppCompatActivity {
 //        shoes = findViewById(R.id.shoes);
 //        sweaters = findViewById(R.id.sweaters);
 //        femaledresses = findViewById(R.id.female_dresses);
-        logoutBtn = findViewById(R.id.admin_logout_btn);
-        checkOrders = findViewById(R.id.admin_check_new_orders);
-        //maintainProducts = findViewById(R.id.maintain_btn);
+//        logoutBtn = findViewById(R.id.admin_logout_btn);
+//        checkOrders = findViewById(R.id.admin_check_new_orders);
+//        maintainProducts = findViewById(R.id.maintain_btn);
 //        purses = findViewById(R.id.purses_bags);
 //        mobiles = findViewById(R.id.mobiles);
 //        headphones = findViewById(R.id.headphones);
 //        watches = findViewById(R.id.watches);
-        logoutBtn = findViewById(R.id.admin_logout_btn);
-        checkOrders = findViewById(R.id.admin_check_new_orders);
-        maintinProducts = findViewById(R.id.maintain_btn);
+//        logoutBtn = findViewById(R.id.admin_logout_btn);
+//        checkOrders = findViewById(R.id.admin_check_new_orders);
+//        maintinProducts = findViewById(R.id.maintain_btn);
 
         recyclerView = findViewById(R.id.admin_category_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new AdminCategoryAdapter(this, items, images));
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AdminCategoryActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                finish();
-            }
-        });
-        
-        maintinProducts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AdminCategoryActivity.this, AdminMaintainProductsActivity.class).putExtra("Admin", "Admin"));
-            }
-        });
-
-        checkOrders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class));
-            }
-        });
+//        logoutBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(AdminCategoryActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+//                finish();
+//            }
+//        });
+//
+//        maintinProducts.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(AdminCategoryActivity.this, AdminMaintainProductsActivity.class).putExtra("Admin", "Admin"));
+//            }
+//        });
+//
+//        checkOrders.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class));
+//            }
+//        });
 
 //        maintainProducts.setOnClickListener(new View.OnClickListener() {
 //            @Override

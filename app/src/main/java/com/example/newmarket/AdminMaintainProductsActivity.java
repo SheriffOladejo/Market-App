@@ -32,7 +32,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_maintain_products);
 
-        vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Admins").child(LoginActivity.currentOnlineVendor.getPhone());
+        vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
         recyclerView = findViewById(R.id.maintain_products_recyclerview);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -61,10 +61,10 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                    Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminEditProductsActivity.class);
-                                    intent.putExtra("pid", model.getPid());
-                                    intent.putExtra("Image", model.getImage());
-                                    startActivity(intent);
+                            Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminEditProductsActivity.class);
+                            intent.putExtra("pid", model.getPid());
+                            intent.putExtra("Image", model.getImage());
+                            startActivity(intent);
                             }
                         });
 

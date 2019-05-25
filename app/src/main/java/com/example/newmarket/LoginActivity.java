@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                         currentOnlineVendor.setPhone(dataSnapshot.child("Phone Number").getValue().toString());
                         progress.dismiss();
                         Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, AdminCategoryActivity.class));
+                        startActivity(new Intent(LoginActivity.this, AdminActivity.class));
                         finish();
                     }
                     else{

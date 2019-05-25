@@ -2,6 +2,7 @@ package com.example.newmarket;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,9 +26,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import id.zelory.compressor.Compressor;
 
 public class AdminAddNewProductActivity extends AppCompatActivity {
 
@@ -42,6 +48,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private DatabaseReference productRef, specificProductRef, vendorProductsRef;
     private ProgressDialog progress;
     private HashMap<String, Object> productMap;
+    private Bitmap compressedImageFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +125,19 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
 
         productID = saveCurrentDate + saveCurrentTime;
 
+//        File newImageFile = new File(imageUri.getPath());
+//        try {
+//            compressedImageFile = new Compressor(AdminAddNewProductActivity.this)
+//                    .setMaxWidth(200)
+//                    .setMaxHeight(200)
+//                    .setQuality(6)
+//                    .compressToBitmap(newImageFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        byte[] thumbnail = baos.toByteArray();
         filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productID + ".jpg");
         final UploadTask uploadTask = filePath.putFile(imageUri);
 

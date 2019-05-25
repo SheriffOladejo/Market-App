@@ -91,43 +91,6 @@ public class MainActivity extends AppCompatActivity
             usernameTextView.setText(LoginActivity.currentOnlineUser.getFirstname());
         }
         }
-//        if(!LoginActivity.currentOnlineUser.getImage().equals("")){
-//            Picasso.get().load(LoginActivity.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
-//        }
-
-
-//        userRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Phone");
-//        userRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.exists()){
-//                    if(dataSnapshot.child("Phone").exists()){
-//                        if(dataSnapshot.child("Nickname").getValue().toString().equals("")){
-//                            String firstname = dataSnapshot.child("Firstname").getValue().toString();
-//                            String imageUri = dataSnapshot.child("Image").getValue().toString();
-//                            if(imageUri != ""){
-//                                Picasso.get().load(imageUri).into(profileImageView);
-//                            }
-//                            usernameTextView.setText(firstname);
-//                        }
-//                        else{
-//                            String nickname = dataSnapshot.child("Nickname").getValue().toString();
-//                            String imageUri = dataSnapshot.child("Image").getValue().toString();
-//                            if(imageUri != ""){
-//                                Picasso.get().load(imageUri).into(profileImageView);
-//                            }
-//                            usernameTextView.setText(nickname);
-//                        }
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//        //type = getIntent().getExtras().get("Admin").toString();
     }
 
     public static String convertFirstLetter(String name){

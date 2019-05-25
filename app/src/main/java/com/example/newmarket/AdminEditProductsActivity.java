@@ -61,6 +61,8 @@ public class AdminEditProductsActivity extends AppCompatActivity {
         progress = new ProgressDialog(this);
 
         productID = getIntent().getStringExtra("pid");
+        String imageURL = getIntent().getStringExtra("Image");
+        Picasso.get().load(imageURL).into(InputProductImage);
 
         productCategoryRef = FirebaseDatabase.getInstance().getReference().child("Products").child(productID);
 
@@ -80,7 +82,7 @@ public class AdminEditProductsActivity extends AppCompatActivity {
 
         productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images");
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
-        vendorProductRef = FirebaseDatabase.getInstance().getReference().child("Admins").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products").child(productID);
+        vendorProductRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
 
         String image = getIntent().getStringExtra("Image");
         Picasso.get().load(image).into(InputProductImage);
@@ -178,14 +180,14 @@ public class AdminEditProductsActivity extends AppCompatActivity {
         productRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    updateProductToVendorRef();
-                }
-                else{
-                    progress.dismiss();
-                    Toast.makeText(AdminEditProductsActivity.this, "Unable to update details, please try again", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+            if(task.isSuccessful()){
+                updateProductToVendorRef();
+            }
+            else{
+                progress.dismiss();
+                Toast.makeText(AdminEditProductsActivity.this, "Unable to update details, please try again", Toast.LENGTH_SHORT).show();
+                finish();
+            }
             }
         });
 
@@ -195,14 +197,14 @@ public class AdminEditProductsActivity extends AppCompatActivity {
         vendorProductRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    updateProductToCategoryRef();
-                }
-                else{
-                    progress.dismiss();
-                    Toast.makeText(AdminEditProductsActivity.this, "Unable to update details, please try again", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+            if(task.isSuccessful()){
+                updateProductToCategoryRef();
+            }
+            else{
+                progress.dismiss();
+                Toast.makeText(AdminEditProductsActivity.this, "Unable to update details, please try again", Toast.LENGTH_SHORT).show();
+                finish();
+            }
             }
         });
     }

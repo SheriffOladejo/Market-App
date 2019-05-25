@@ -7,18 +7,23 @@ public class Cart {
     private String Quantity;
     private String Discount;
     private String OrderID;
+    private String Vendor;
+    private String Buyer_Phone_Number;
+    private String Buyer_Name;
 
-    public Cart(String pid, String product_Name, String price, String quantity, String discount, String orderID) {
+    public Cart(String pid, String product_Name, String price, String quantity, String discount, String orderID, String vendor, String buyer_Phone_Number, String buyer_Name) {
         this.pid = pid;
         Product_Name = product_Name;
         Price = price;
         Quantity = quantity;
         Discount = discount;
         OrderID = orderID;
+        Vendor = vendor;
+        Buyer_Phone_Number = buyer_Phone_Number;
+        Buyer_Name = buyer_Name;
     }
 
-    public Cart() {
-    }
+    public Cart(){}
 
     public String getPid() {
         return pid;
@@ -66,6 +71,30 @@ public class Cart {
 
     public void setOrderID(String orderID) {
         OrderID = orderID;
+    }
+
+    public String getVendor() {
+        return Vendor;
+    }
+
+    public void setVendor(String vendor) {
+        Vendor = vendor;
+    }
+
+    public String getBuyer_Phone_Number() {
+        return Buyer_Phone_Number;
+    }
+
+    public void setBuyer_Phone_Number(String buyer_Phone_Number) {
+        Buyer_Phone_Number = buyer_Phone_Number;
+    }
+
+    public String getBuyer_Name() {
+        return Buyer_Name;
+    }
+
+    public void setBuyer_Name(String buyer_Name) {
+        Buyer_Name = buyer_Name;
     }
 }
 

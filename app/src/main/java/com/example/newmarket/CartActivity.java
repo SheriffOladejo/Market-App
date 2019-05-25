@@ -58,14 +58,14 @@ public class CartActivity extends AppCompatActivity {
         nextProcessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(overallTotalPrice == 0){
-                    Toast.makeText(CartActivity.this, "No orders have been placed", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Intent intent = new Intent(CartActivity.this, ConfirmFinalOrder.class);
-                    intent.putExtra("Total Price", String.valueOf(overallTotalPrice));
-                    startActivity(intent);
-                }
+            if(overallTotalPrice == 0){
+                Toast.makeText(CartActivity.this, "No orders have been placed", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Intent intent = new Intent(CartActivity.this, ConfirmFinalOrder.class);
+                intent.putExtra("Total Price", String.valueOf(overallTotalPrice));
+                startActivity(intent);
+            }
 
             }
         });
@@ -82,7 +82,7 @@ public class CartActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Cart> options =
             new FirebaseRecyclerOptions.Builder<Cart>().setQuery(cartListRef.child(phone)
-                .child("Pending Orders"), Cart.class).build();
+                .child("Cart"), Cart.class).build();
 
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter
                 = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
@@ -95,9 +95,11 @@ public class CartActivity extends AppCompatActivity {
                 holder.remove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                    DatabaseReference vendor = FirebaseDatabase.getInstance().getReference().child("Vendors");
+                    vendor.child(model.getVendor()).child("Orders").child(model.getPid()).removeValue();
                     cartListRef.child(phone)
-                        .child("Pending Orders")
-                        .child(ProductDetailActivity.currentOrderObject.getOrderID())
+                        .child("Cart")
+                        .child(model.getPid())
                         .removeValue()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

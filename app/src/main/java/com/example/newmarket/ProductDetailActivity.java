@@ -36,9 +36,12 @@ public class ProductDetailActivity extends AppCompatActivity {
     private ElegantNumberButton numberButton;
     private TextView productPrice, productName, productDescription, discount;
     private String productId = "";
+    private String vendor;
     private String state = "normal";
     private String userPhone = LoginActivity.currentOnlineUser.getPhone();
     public static Cart currentOrderObject;
+    private Products products;
+    private final HashMap<String, Object> cartMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +81,15 @@ public class ProductDetailActivity extends AppCompatActivity {
         String orderID = saveCurrentTime + saveCurrentDate;
 
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        final HashMap<String, Object> cartMap = new HashMap<>();
+
         cartMap.put("pid", productId);
         cartMap.put("Product Name", productName.getText().toString());
         cartMap.put("Price", productPrice.getText().toString());
         cartMap.put("Quantity", numberButton.getNumber());
         cartMap.put("Discount", "");
-        currentOrderObject.setOrderID(orderID);
+        cartMap.put("Vendor", products.getVendor());
+        cartMap.put("Buyer_Phone_Number", LoginActivity.currentOnlineUser.getPhone());
+        cartMap.put("Buyer_Name", LoginActivity.currentOnlineUser.getFirstname());
 //        Calendar calendar = Calendar.getInstance();
 //        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
 //        saveCurrentDate = currentDate.format(calendar.getTime());
@@ -93,19 +98,20 @@ public class ProductDetailActivity extends AppCompatActivity {
 //        saveCurrentTime = currentTime.format(calendar.getTime());
 
 
+        DatabaseReference vendor = FirebaseDatabase.getInstance().getReference().child("Vendors");
+        vendor.child(products.getVendor()).child("Orders").updateChildren(cartMap);
         cartListRef.child(userPhone)
-        .child("Pending Orders").child(orderID)
+        .child("Cart").child(products.getPid())
         .updateChildren(cartMap)
         .addOnCompleteListener(new OnCompleteListener<Void>() {
         @Override
         public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(ProductDetailActivity.this, "Added to Bucket", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(ProductDetailActivity.this, "Unable to add to Bucket", Toast.LENGTH_SHORT).show();
-
-                }
+            if(task.isSuccessful()){
+                Toast.makeText(ProductDetailActivity.this, "Added to Bucket", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(ProductDetailActivity.this, "Unable to add to Bucket, please try again", Toast.LENGTH_SHORT).show();
+            }
             }
 
         });
@@ -117,7 +123,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    Products products = dataSnapshot.getValue(Products.class);
+                    products = dataSnapshot.getValue(Products.class);
                     productName.setText(MainActivity.convertFirstLetter(products.getProduct_Name()));
                     productPrice.setText(products.getPrice());
                     productDescription.setText(MainActivity.convertFirstLetter(products.getDescription()));

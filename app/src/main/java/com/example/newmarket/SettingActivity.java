@@ -3,10 +3,12 @@ package com.example.newmarket;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.Continuation;
@@ -26,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.rey.material.widget.SnackBar;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -43,6 +47,7 @@ public class SettingActivity extends AppCompatActivity {
     private Button saveButton;
     private Toolbar toolbar;
     private Uri mainImageUri = null;
+    private RelativeLayout relativeLayout;
 
     private Uri imageUri;
     private String myUrl = "";
@@ -56,6 +61,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        relativeLayout = findViewById(R.id.settings_layout);
         storageProfilePictureRef = FirebaseStorage.getInstance().getReference().child("Profile Pictures");
 
         profileImageView = findViewById(R.id.settings_profile_image);
@@ -92,6 +98,11 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         Paper.init(this);
+        Snackbar snackbar = Snackbar.make(relativeLayout, "Snackbar works", Snackbar.LENGTH_LONG);
+        View snackView = snackbar.getView();
+        TextView textView = snackView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.YELLOW);
+        snackbar.show();
     }
 
     @Override
@@ -99,7 +110,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(requestCode == RESULT_OK){
+            if(resultCode == RESULT_OK){
                 mainImageUri = result.getUri();
                 profileImageView.setImageURI(mainImageUri);
             }
