@@ -54,9 +54,9 @@ public class MobilePhonesActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
                         holder.textProductName.setText(model.getProduct_Name());
-                        holder.textProductDescription.setText(model.getDescription());
+//                        holder.textProductDescription.setText(model.getDescription());
                         holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
-                        holder.vendor.setText("Vendor: " + model.getVendor());
+//                        holder.vendor.setText("Vendor: " + model.getVendor());
                         Picasso.get().load(model.getImage()).into(holder.imageView);
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {

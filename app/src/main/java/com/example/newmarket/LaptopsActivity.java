@@ -31,7 +31,7 @@ public class LaptopsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_laptops);
 
-        productRef = FirebaseDatabase.getInstance().getReference().child("Products").child("Laptops");
+        productRef = FirebaseDatabase.getInstance().getReference().child("Laptops");
         recyclerView = findViewById(R.id.laptops_recyclerview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(LaptopsActivity.this, 2);
@@ -54,9 +54,9 @@ public class LaptopsActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
                         holder.textProductName.setText(model.getProduct_Name());
-                        holder.textProductDescription.setText(model.getDescription());
+                        //holder.textProductDescription.setText(model.getDescription());
                         holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
-                        holder.vendor.setText("Vendor: " + model.getVendor());
+                        //holder.vendor.setText("Vendor: " + model.getVendor());
                         Picasso.get().load(model.getImage()).into(holder.imageView);
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {

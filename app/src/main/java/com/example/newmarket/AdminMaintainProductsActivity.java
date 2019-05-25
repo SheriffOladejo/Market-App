@@ -26,17 +26,19 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
 
     private DatabaseReference vendorProductsRef;
     private RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_maintain_products);
 
-        vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
+        vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Mobile Phones");
         recyclerView = findViewById(R.id.maintain_products_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(AdminMaintainProductsActivity.this, 2);
+        recyclerView.setLayoutManager(layoutManager);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.hasFixedSize();
         Toolbar toolbar = findViewById(R.id.admin_maintain_products_toolbar);
         toolbar.setTitle("Maintain Products");
 
