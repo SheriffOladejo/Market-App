@@ -29,7 +29,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mobile_phones);
+        setContentView(R.layout.activity_admin_maintain_products);
 
         productRef = FirebaseDatabase.getInstance().getReference().child("Mobile Phones");
         recyclerView = findViewById(R.id.maintain_products_recyclerview);
