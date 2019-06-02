@@ -52,6 +52,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
                     holder.userTotalPrice.setText("Total Amount: #" + model.getTotal_Amount());
                     holder.userDateTime.setText("Order at: " + model.getDate() + " " + model.getTime());
                     holder.userShippingAddress.setText("Shipping Address: " + model.getAddress());
+                    holder.extras.setText("Extras: " + model.getExtras());
 
                     holder.showOrdersbutton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -103,7 +104,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
 
     public static class AdminOrdersViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView userName, userPhoneNumber, userTotalPrice, userDateTime, userShippingAddress;
+        public TextView userName, userPhoneNumber, userTotalPrice, userDateTime, userShippingAddress, extras;
         public Button showOrdersbutton;
 
         public AdminOrdersViewHolder(@NonNull View itemView) {
@@ -115,6 +116,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
             userTotalPrice = itemView.findViewById(R.id.order_total_price);
             userShippingAddress = itemView.findViewById(R.id.order_address_city);
             showOrdersbutton = itemView.findViewById(R.id.show_all_products_btn);
+            extras = itemView.findViewById(R.id.extras);
         }
     }
 

@@ -82,6 +82,21 @@
             android:textSize="18dp"
         />
 
+        <TextView
+            android:id="@+id/extras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Extras"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/white"
+            android:layout_below="@id/order_date_time"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:textSize="18dp"
+            />
+
         <Button
             android:id="@+id/show_all_products_btn"
             android:layout_width="match_parent"
@@ -90,10 +105,11 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:background="@color/white"
-            android:text="Show This Order Products"
+            android:text="Show This Order's Products"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:layout_below="@id/order_date_time"/>
+            android:textAllCaps="false"
+            android:layout_below="@id/extras"/>
     </RelativeLayout>
 
 </RelativeLayout>

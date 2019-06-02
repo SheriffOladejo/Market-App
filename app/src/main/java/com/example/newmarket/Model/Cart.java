@@ -10,8 +10,9 @@ public class Cart {
     private String Vendor;
     private String Buyer_Phone_Number;
     private String Buyer_Name;
+    private String Extra_Details;
 
-    public Cart(String pid, String product_Name, String price, String quantity, String discount, String orderID, String vendor, String buyer_Phone_Number, String buyer_Name) {
+    public Cart(String pid, String extra_Details, String product_Name, String price, String quantity, String discount, String orderID, String vendor, String buyer_Phone_Number, String buyer_Name) {
         this.pid = pid;
         Product_Name = product_Name;
         Price = price;
@@ -21,9 +22,18 @@ public class Cart {
         Vendor = vendor;
         Buyer_Phone_Number = buyer_Phone_Number;
         Buyer_Name = buyer_Name;
+        Extra_Details = extra_Details;
     }
 
     public Cart(){}
+
+    public String getExtra_Details() {
+        return Extra_Details;
+    }
+
+    public void setExtra_Details(String extra_Details) {
+        Extra_Details = extra_Details;
+    }
 
     public String getPid() {
         return pid;

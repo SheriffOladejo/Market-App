@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,13 +37,14 @@ import io.paperdb.Paper;
 public class ProductDetailActivity extends AppCompatActivity {
 
     private Button addToCart;
-    private RelativeLayout relativeLayout;
+    private LinearLayout relativeLayout;
     private ImageView productImage;
     private ElegantNumberButton numberButton;
     private TextView productPrice, productName, productDescription, discount;
     private String productId = "";
     private String vendor;
     private String state = "normal";
+    private EditText extra_details;
     private String userPhone = LoginActivity.currentOnlineUser.getPhone();
     public static Cart currentOrderObject;
     private Products products;
@@ -54,6 +57,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         Paper.init(this);
 
+        extra_details = findViewById(R.id.extra_details);
         relativeLayout = findViewById(R.id.product_details_relative_layout);
         productId = getIntent().getStringExtra("pid");
         numberButton = findViewById(R.id.number_btn);
@@ -82,6 +86,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         saveCurrentDate = currentDate.format(calForDate.getTime());
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
+        String extras = extra_details.getText().toString();
 
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -93,6 +98,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         cartMap.put("Vendor", products.getVendor());
         cartMap.put("Buyer_Phone_Number", LoginActivity.currentOnlineUser.getPhone());
         cartMap.put("Buyer_Name", LoginActivity.currentOnlineUser.getFirstname());
+        cartMap.put("Extra_Details", extras);
 
         DatabaseReference vendor = FirebaseDatabase.getInstance().getReference().child("Vendors");
         vendor.child(products.getVendor()).child("Orders").updateChildren(cartMap);

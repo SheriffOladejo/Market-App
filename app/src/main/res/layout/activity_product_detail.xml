@@ -1,131 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/product_details_relative_layout"
+    android:orientation="vertical"
     android:layout_height="wrap_content"
     tools:context=".ProductDetailActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/product_image_details"
-                android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:scaleType="centerCrop" />
-
-            <TextView
-                android:id="@+id/product_name_details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/product_image_details"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="16dp"
-                android:paddingLeft="10dp"
-                android:text="Product Name"
-                android:textAlignment="viewStart"
-                android:textColor="@color/brown"
-                android:textSize="16sp" />
+                android:layout_width="250dp"
+                android:layout_height="236dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/bags" />
 
             <TextView
                 android:id="@+id/product_description_details"
-                android:layout_width="230dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/product_name_details"
-                android:layout_alignParentStart="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/product_image_details" />
+
+            <EditText
+                android:id="@+id/extra_details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:paddingLeft="10dp"
-                android:text="wwwwwwwwwwwwwwwwwwwwwwwsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssswwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwion"
-                android:textAlignment="viewStart"
-                android:textColor="@color/brown"
-                android:textSize="16sp" />
+                android:layout_marginEnd="8dp"
+                android:ems="10"
+                android:hint="Extra details e.g Desired Size, Color e.t.c"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/product_description_details" />
 
             <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                 android:id="@+id/number_btn"
-                android:layout_width="151dp"
-                android:layout_height="42dp"
-                android:layout_below="@+id/product_description_details"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="26dp"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 app:backGroundColor="@color/colorAccent"
-                android:elevation="6dp"
-                app:finalNumber="15"
-                app:initialNumber="1"
-                app:textSize="16dp">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/product_image_details"
+                app:layout_constraintTop_toBottomOf="@+id/original_price">
 
             </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
 
             <Button
                 android:id="@+id/product_add_to_cart_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="15dp"
-                android:background="@drawable/button_border"
-                android:layout_below="@id/number_btn"
-                android:backgroundTint="@color/colorAccent"
-                android:text="Add to Cart"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="281dp"
-                android:layout_marginEnd="29dp"
-                android:text="12000" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="73dp"
-                android:layout_height="32dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="276dp"
-                android:layout_marginEnd="89dp"
-                android:backgroundTint="@color/green"
-                android:text="Discount Price"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/button_border"
+                android:backgroundTint="@color/colorAccent"
+                android:text="Add to Bucket"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="7sp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/product_image_details"
+                app:layout_constraintTop_toBottomOf="@+id/number_btn" />
 
-            <Button
-                android:layout_width="73dp"
-                android:layout_height="32dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:textSize="8sp"
-                android:layout_marginTop="312dp"
-                android:layout_marginEnd="89dp"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/red"
-                android:text="Original Price" />
+            <TextView
+                android:id="@+id/product_name_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/product_image_details"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/original_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="319dp"
-                android:layout_marginEnd="27dp"
-                android:text="15000" />
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/product_image_details"
+                app:layout_constraintTop_toBottomOf="@+id/product_name_details" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="3dp"
+                android:text="#"
+                app:layout_constraintEnd_toStartOf="@+id/original_price"
+                app:layout_constraintTop_toBottomOf="@+id/product_name_details" />
 
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

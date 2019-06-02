@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity
     private CircleImageView profileImageView;
     private FrameLayout frameLayout;
     private Fragment home_fragment;
+    private Fragment settingFragment;
+    private Fragment categoryFragment;
     private Fragment cart_fragment;
     private BottomNavigationView bottomNavigationView;
 
@@ -60,8 +62,11 @@ public class MainActivity extends AppCompatActivity
 
         Paper.init(this);
         home_fragment = new HomeFragment();
+        settingFragment = new SettingsFragment();
+        categoryFragment = new CategoriesFragment();
         cart_fragment = new CartFragment();
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        replaceFragment(home_fragment);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -71,7 +76,13 @@ public class MainActivity extends AppCompatActivity
                         replaceFragment(home_fragment);
                         return true;
                     case R.id.nav_cart:
-                        replaceFragment(cart_fragment);
+                        startActivity(new Intent(MainActivity.this, CartActivity.class));
+                        return true;
+                    case R.id.nav_settings:
+                        replaceFragment(settingFragment);
+                        return true;
+                    case R.id.nav_categories:
+                        replaceFragment(categoryFragment);
                         return true;
                     default:
                         return false;

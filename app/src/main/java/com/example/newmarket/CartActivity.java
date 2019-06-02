@@ -74,6 +74,12 @@ public class CartActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(CartActivity.this, MainActivity.class));
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         //checkOrderState();
