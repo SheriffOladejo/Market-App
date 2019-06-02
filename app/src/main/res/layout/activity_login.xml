@@ -4,9 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/login_linear_layout"
     android:orientation="vertical"
     android:background="@color/colorPrimary"
     tools:context=".LoginActivity">
+
+    <!--<ProgressBar-->
+        <!--android:id="@+id/progressBar2"-->
+        <!--style="?android:attr/progressBarStyleHorizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
 
     <ImageView
         android:id="@+id/imageView"
@@ -23,7 +30,7 @@
         android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Phone Number"
-        android:inputType="number"
+        android:inputType="phone"
         android:textAlignment="center"
         android:textColor="@color/brown"
         android:textColorHint="@color/brown" />
@@ -64,7 +71,7 @@
         android:id="@+id/forgot_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="Forgot password?"
         android:textColor="@color/brown"
@@ -88,11 +95,11 @@
 
         <TextView
             android:id="@+id/not_admin"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:text="Not an Admin?"
+            android:text="Not a Vendor?"
             android:textColor="@color/brown"
             android:textSize="16sp"
             android:visibility="invisible"
@@ -102,7 +109,7 @@
             android:id="@+id/admin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:text="I'm a Vendor?"
             android:textAlignment="viewEnd"
             android:textColor="@color/brown"

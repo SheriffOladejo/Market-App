@@ -1,12 +1,13 @@
 package com.example.newmarket;
 
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -46,6 +48,10 @@ public class MainActivity extends AppCompatActivity
     private TextView usernameTextView;
     private String type ="";
     private CircleImageView profileImageView;
+    private FrameLayout frameLayout;
+    private Fragment home_fragment;
+    private Fragment cart_fragment;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +59,28 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Paper.init(this);
+        home_fragment = new HomeFragment();
+        cart_fragment = new CartFragment();
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch(menuItem.getItemId()){
+                    case R.id.nav_home:
+                        replaceFragment(home_fragment);
+                        return true;
+                    case R.id.nav_cart:
+                        replaceFragment(cart_fragment);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
 
         Intent intent = getIntent();
+        frameLayout = findViewById(R.id.main_framelayout);
         Bundle bundle = intent.getExtras();
         if(bundle != null){
             type = getIntent().getExtras().get("Admin").toString();
@@ -76,10 +102,10 @@ public class MainActivity extends AppCompatActivity
         profileImageView = headerView.findViewById(R.id.user_profile_image);
 
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
-        recyclerView = findViewById(R.id.recycler_menu);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(MainActivity.this, 2);
-        recyclerView.setLayoutManager(layoutManager);
+        //recyclerView = findViewById(R.id.recycler_menu);
+//        recyclerView.setHasFixedSize(true);
+//        layoutManager = new GridLayoutManager(MainActivity.this, 2);
+//        recyclerView.setLayoutManager(layoutManager);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -104,7 +130,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Search data
-    private void firebaseSearch(String searchText){
+    private void firebasesearch(String searchText){
         Query firebaseSearchQuery = productRef.orderByChild("Product_Name").startAt(searchText).endAt(searchText + "\uf8ff");
 
         FirebaseRecyclerOptions<Products> options =
@@ -150,51 +176,57 @@ public class MainActivity extends AppCompatActivity
         adapter.startListening();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseRecyclerOptions<Products> options =
-        new FirebaseRecyclerOptions.Builder<Products>()
-        .setQuery(productRef, Products.class)
-        .build();
-
-        FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
-            new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options){
-                @Override
-                protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
-                    holder.textProductName.setText(model.getProduct_Name());
-                    holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
-                    Picasso.get().load(model.getImage()).into(holder.imageView);
-
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        if(type.equals("Admin")){
-                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-                            intent.putExtra("pid", model.getPid());
-                            startActivity(intent);
-                        }
-                        else{
-                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-                            intent.putExtra("pid", model.getPid());
-                            startActivity(intent);
-                        }
-
-                        }
-                    });
-
-                }
-
-                @NonNull
-                @Override
-                public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout, parent, false);
-                    return new ProductViewHolder(view);
-                }
-            };
-            recyclerView.setAdapter(adapter);
-            adapter.startListening();
+    private void replaceFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_framelayout, fragment);
+        fragmentTransaction.commit();
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        FirebaseRecyclerOptions<Products> options =
+//        new FirebaseRecyclerOptions.Builder<Products>()
+//        .setQuery(productRef, Products.class)
+//        .build();
+//
+//        FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
+//            new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options){
+//                @Override
+//                protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
+//                    holder.textProductName.setText(model.getProduct_Name());
+//                    holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
+//                    Picasso.get().load(model.getImage()).into(holder.imageView);
+//
+//                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                        if(type.equals("Admin")){
+//                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
+//                            intent.putExtra("pid", model.getPid());
+//                            startActivity(intent);
+//                        }
+//                        else{
+//                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
+//                            intent.putExtra("pid", model.getPid());
+//                            startActivity(intent);
+//                        }
+//
+//                        }
+//                    });
+//
+//                }
+//
+//                @NonNull
+//                @Override
+//                public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+//                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout, parent, false);
+//                    return new ProductViewHolder(view);
+//                }
+//            };
+//            recyclerView.setAdapter(adapter);
+//            adapter.startListening();
+//    }
 
     @Override
     public void onBackPressed() {
@@ -216,13 +248,13 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                firebaseSearch(query);
+                firebasesearch(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                firebaseSearch(newText);
+                firebasesearch(newText);
                 return false;
             }
         });
@@ -266,6 +298,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_logout)
         {
+            Paper.book().destroy();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

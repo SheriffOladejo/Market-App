@@ -2,6 +2,7 @@ package com.example.newmarket;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +27,7 @@ public class SignUp extends AppCompatActivity {
 
     private EditText firstname, lastname, nickname, email, password, confirm_password, phone_number;
     private ProgressDialog progress;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class SignUp extends AppCompatActivity {
         confirm_password = findViewById(R.id.create_confirm);
         phone_number = findViewById(R.id.create_phone);
         progress = new ProgressDialog(this);
+        linearLayout = findViewById(R.id.sign_up_linear_layout);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +64,13 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
+    private void useSnackBar(String snackBarMessage){
+        Snackbar snackbar = Snackbar.make(linearLayout, snackBarMessage, Snackbar.LENGTH_SHORT);
+        View snackView = snackbar.getView();
+        TextView textView = snackView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+    }
 
     /*private void writeSignUpToDevice(String name, String surname, String nick){
         Paper.book().write(Prevalent.UserFirstnameKey, name);
@@ -84,13 +96,13 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(SignUp.this, "Account created", Toast.LENGTH_SHORT).show();
+                    useSnackBar("Account Created");
                     progress.dismiss();
                     startActivity(new Intent(SignUp.this, LoginActivity.class));
                     finish();
                 }
                 else{
-                    Toast.makeText(SignUp.this, "Problem encountered while creating account", Toast.LENGTH_SHORT).show();
+                    useSnackBar("Unable to create account");
                     progress.dismiss();
                 }
             }
@@ -98,8 +110,8 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void initDialogBox(ProgressDialog dialog){
-        dialog.setTitle("Creating Account");
-        dialog.setMessage("Relax while we create your account");
+        dialog.setTitle("Please Wait...");
+        dialog.setMessage("Creating Account");
         dialog.setCancelable(false);
         dialog.show();
     }
@@ -114,10 +126,10 @@ public class SignUp extends AppCompatActivity {
         String phone = phone_number.getText().toString();
 
         if(name.isEmpty() || surname.isEmpty() || mail.isEmpty() || pass.isEmpty() || confirm_pass.isEmpty() || phone.isEmpty()){
-            Toast.makeText(SignUp.this, "All fields should be filled", Toast.LENGTH_SHORT).show();
+            useSnackBar("Fields should be filled");
         }
         else if(!pass.equals(confirm_pass)){
-            Toast.makeText(SignUp.this, "Passwords don't match", Toast.LENGTH_SHORT).show();
+            useSnackBar("Passwords don't match");
             progress.dismiss();
         }
         else{

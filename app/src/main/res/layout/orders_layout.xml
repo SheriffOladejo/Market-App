@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorAccent"
         android:layout_margin="10dp"
         android:padding="10dp">
 
@@ -91,7 +91,7 @@
             android:layout_marginTop="20dp"
             android:background="@color/white"
             android:text="Show This Order Products"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_below="@id/order_date_time"/>
     </RelativeLayout>

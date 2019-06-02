@@ -2,12 +2,16 @@ package com.example.newmarket;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.newmarket.Prevalent.Prevalent;
@@ -27,6 +31,7 @@ public class BecomeVendorActivity extends AppCompatActivity {
     private EditText email, password, confirm_password, phone_number, company_name;
     private ProgressDialog progress;
     private String phone, mail, pass, confirm_pass, vendor;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class BecomeVendorActivity extends AppCompatActivity {
 
         Paper.init(this);
 
+        linearLayout = findViewById(R.id.become_vendor_linear_layout);
         createAccountButton = findViewById(R.id.signup);
         Login = findViewById(R.id.create_login);
         email = findViewById(R.id.create_email);
@@ -66,17 +72,27 @@ public class BecomeVendorActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
             if(task.isSuccessful()){
-                Toast.makeText(BecomeVendorActivity.this, "Account created", Toast.LENGTH_SHORT).show();
+                useSnackBar("Account created");
+                //Toast.makeText(BecomeVendorActivity.this, "Account created", Toast.LENGTH_SHORT).show();
                 progress.dismiss();
-                startActivity(new Intent(BecomeVendorActivity.this, LoginActivity.class));
+                startActivity(new Intent(BecomeVendorActivity.this, AdminActivity.class));
                 finish();
             }
             else{
-                Toast.makeText(BecomeVendorActivity.this, "Problem encountered while creating account", Toast.LENGTH_SHORT).show();
+                useSnackBar("Problem encountered while creating your account");
+                //Toast.makeText(BecomeVendorActivity.this, "Problem encountered while creating account", Toast.LENGTH_SHORT).show();
                 progress.dismiss();
             }
             }
         });
+    }
+
+    private void useSnackBar(String snackBarMessage) {
+        Snackbar snackbar = Snackbar.make(linearLayout, snackBarMessage, Snackbar.LENGTH_SHORT);
+        View snackView = snackbar.getView();
+        TextView textView = snackView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
     }
 
     private void initDialogBox(ProgressDialog dialog){

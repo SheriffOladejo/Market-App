@@ -1,12 +1,15 @@
 package com.example.newmarket;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ import io.paperdb.Paper;
 public class ProductDetailActivity extends AppCompatActivity {
 
     private Button addToCart;
+    private RelativeLayout relativeLayout;
     private ImageView productImage;
     private ElegantNumberButton numberButton;
     private TextView productPrice, productName, productDescription, discount;
@@ -50,6 +54,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         Paper.init(this);
 
+        relativeLayout = findViewById(R.id.product_details_relative_layout);
         productId = getIntent().getStringExtra("pid");
         numberButton = findViewById(R.id.number_btn);
         productImage = findViewById(R.id.product_image_details);
@@ -78,8 +83,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
-        String orderID = saveCurrentTime + saveCurrentDate;
-
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         cartMap.put("pid", productId);
@@ -90,16 +93,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         cartMap.put("Vendor", products.getVendor());
         cartMap.put("Buyer_Phone_Number", LoginActivity.currentOnlineUser.getPhone());
         cartMap.put("Buyer_Name", LoginActivity.currentOnlineUser.getFirstname());
-//        Calendar calendar = Calendar.getInstance();
-//        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-//        saveCurrentDate = currentDate.format(calendar.getTime());
-//
-//        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-//        saveCurrentTime = currentTime.format(calendar.getTime());
-
 
         DatabaseReference vendor = FirebaseDatabase.getInstance().getReference().child("Vendors");
         vendor.child(products.getVendor()).child("Orders").updateChildren(cartMap);
+
         cartListRef.child(userPhone)
         .child("Cart").child(products.getPid())
         .updateChildren(cartMap)
@@ -107,14 +104,22 @@ public class ProductDetailActivity extends AppCompatActivity {
         @Override
         public void onComplete(@NonNull Task<Void> task) {
             if(task.isSuccessful()){
-                Toast.makeText(ProductDetailActivity.this, "Added to Bucket", Toast.LENGTH_SHORT).show();
+                useSnackBar("Added to Bucket");
             }
             else{
-                Toast.makeText(ProductDetailActivity.this, "Unable to add to Bucket, please try again", Toast.LENGTH_SHORT).show();
+                useSnackBar("No vex abeg try again");
             }
             }
 
         });
+    }
+
+    private void useSnackBar(String snackBarMessage) {
+        Snackbar snackbar = Snackbar.make(relativeLayout, snackBarMessage, Snackbar.LENGTH_SHORT);
+        View snackView = snackbar.getView();
+        TextView textView = snackView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
     }
 
     private void getProductDetails(String productId) {
