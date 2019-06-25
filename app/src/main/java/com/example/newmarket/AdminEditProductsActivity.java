@@ -36,12 +36,12 @@ import java.util.HashMap;
 
 public class AdminEditProductsActivity extends AppCompatActivity {
 
-    private String productID, downloadImageUrl, Description, productRandomKey, Price, ProductName, saveCurrentDate, saveCurrentTime, categoryName;
+    private String productID, Description,discount, Price, ProductName, categoryName;
     private ImageView InputProductImage;
-    private EditText InputProductName, InputProductDesc, InputProductPrice;
+    private EditText InputProductName, InputProductDesc, InputProductPrice, Discount;
     private static final int GalleryPick = 1;
     private Uri imageUri;
-    private Button AddNewProductButton;
+    private Button applyChanges, remove;
     private StorageReference productImagesRef;
     private StorageReference filePath;
     private DatabaseReference productRef, productCategoryRef, vendorProductRef;
@@ -53,19 +53,29 @@ public class AdminEditProductsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_edit_products);
 
-        AddNewProductButton = findViewById(R.id.apply_changes);
+        applyChanges = findViewById(R.id.apply_changes);
+        remove = findViewById(R.id.remove);
+        Discount = findViewById(R.id.product_discount_edit);
         InputProductName = findViewById(R.id.product_name_edit);
         InputProductDesc = findViewById(R.id.product_description_edit);
         InputProductPrice = findViewById(R.id.product_price_edit);
         InputProductImage = findViewById(R.id.product_image_edit);
+
         progress = new ProgressDialog(this);
 
         productID = getIntent().getStringExtra("pid");
         String imageURL = getIntent().getStringExtra("Image");
+        String name = getIntent().getStringExtra("Product Name");
+        String product_discount = getIntent().getStringExtra("Discount");
+        String price = getIntent().getStringExtra("Price");
+        String desc = getIntent().getStringExtra("Description");
+        Discount.setText(product_discount);
+        InputProductPrice.setText(price);
+        InputProductName.setText(name);
+        InputProductDesc.setText(desc);
         Picasso.get().load(imageURL).into(InputProductImage);
 
         productCategoryRef = FirebaseDatabase.getInstance().getReference().child("Products").child(productID);
-
         productCategoryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -80,29 +90,46 @@ public class AdminEditProductsActivity extends AppCompatActivity {
             }
         });
 
-        productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images");
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productCategoryRef.removeValue();
+                productRef.removeValue();
+                productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images").child(categoryName).child(productID);
+                productImagesRef.delete();
+                vendorProductRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            startActivity(new Intent(AdminEditProductsActivity.this, AdminActivity.class));
+                        }
+                        else{
+                            Toast.makeText(AdminEditProductsActivity.this, "Error encountered", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        //productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images");
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
         vendorProductRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
 
         String image = getIntent().getStringExtra("Image");
         Picasso.get().load(image).into(InputProductImage);
 
-        InputProductImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
-
-        AddNewProductButton.setOnClickListener(new View.OnClickListener() {
+//        InputProductImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openGallery();
+//            }
+//        });
+        applyChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateProductData();
-
             }
         });
-
-
         productCategoryRef = FirebaseDatabase.getInstance().getReference().child("Products").child(productID);
 
     }
@@ -111,70 +138,78 @@ public class AdminEditProductsActivity extends AppCompatActivity {
         Description = InputProductDesc.getText().toString();
         Price = InputProductPrice.getText().toString();
         ProductName = InputProductName.getText().toString();
-
-        if(imageUri == null){
-            Toast.makeText(this, "Product image is mandatory", Toast.LENGTH_SHORT).show();
+        if(Discount.getText().toString()==""){
+            discount = "0";
         }
-        else if(TextUtils.isEmpty(Description))
+        else{
+            discount = Discount.getText().toString();
+        }
+
+        if(TextUtils.isEmpty(Description))
             Toast.makeText(this, "Product description is mandatory", Toast.LENGTH_SHORT).show();
         else if(TextUtils.isEmpty(ProductName))
             Toast.makeText(this, "Product name is mandatory", Toast.LENGTH_SHORT).show();
         else if(TextUtils.isEmpty(Price))
             Toast.makeText(this, "Product price is mandatory", Toast.LENGTH_SHORT).show();
         else{
-            StoreProductInformation();
+            //StoreProductInformation();
+            progress.setTitle("Updating...");
+            progress.setMessage("Please Wait");
+            progress.show();
+            updateProductInfoToProductRef();
         }
     }
 
-    private void StoreProductInformation() {
-        progress.setTitle("Updating Product.");
-        progress.setMessage("Dear Admin, please wait while we update your product.");
-        progress.setCancelable(false);
-        progress.show();
-        filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
-        final UploadTask uploadTask = filePath.putFile(imageUri);
-
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                String message = e.getMessage();
-                Toast.makeText(AdminEditProductsActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                progress.dismiss();
-
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(AdminEditProductsActivity.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if(!task.isSuccessful()){
-                            throw task.getException();
-                        }
-                        downloadImageUrl = filePath.getDownloadUrl().toString();
-                        return filePath.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if(task.isSuccessful()){
-                            downloadImageUrl = task.getResult().toString();
-                            Toast.makeText(AdminEditProductsActivity.this, "Got product image successfully", Toast.LENGTH_SHORT).show();
-                            updateProductInfoToProductRef();
-                        }
-                    }
-                });
-            }
-        });
-    }
+//    private void StoreProductInformation() {
+//        progress.setTitle("Updating Product.");
+//        progress.setMessage("Dear Admin, please wait while we update your product.");
+//        progress.setCancelable(false);
+//        progress.show();
+//        filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productRandomKey + ".jpg");
+//        final UploadTask uploadTask = filePath.putFile(imageUri);
+//
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                String message = e.getMessage();
+//                Toast.makeText(AdminEditProductsActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+//                progress.dismiss();
+//
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                Toast.makeText(AdminEditProductsActivity.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+//                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//                    @Override
+//                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                        if(!task.isSuccessful()){
+//                            throw task.getException();
+//                        }
+//                        downloadImageUrl = filePath.getDownloadUrl().toString();
+//                        return filePath.getDownloadUrl();
+//                    }
+//                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Uri> task) {
+//                        if(task.isSuccessful()){
+//                            downloadImageUrl = task.getResult().toString();
+//                            Toast.makeText(AdminEditProductsActivity.this, "Got product image successfully", Toast.LENGTH_SHORT).show();
+//                            updateProductInfoToProductRef();
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     private void updateProductInfoToProductRef(){
         productMap = new HashMap<>();
         productMap.put("Price", Price);
         productMap.put("Description", Description);
-        productMap.put("Image", downloadImageUrl);
+        //productMap.put("Image", downloadImageUrl);
         productMap.put("Product_Name", ProductName);
+        productMap.put("Discount", discount);
 
         DatabaseReference productRef = FirebaseDatabase.getInstance().getReference().child("Products").child(productID);
         productRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -217,6 +252,7 @@ public class AdminEditProductsActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText(AdminEditProductsActivity.this, "Product updated successfully", Toast.LENGTH_SHORT).show();
                     progress.dismiss();
+                    startActivity(new Intent(AdminEditProductsActivity.this, AdminActivity.class));
                 }
                 else{
                     Toast.makeText(AdminEditProductsActivity.this, "Unable to update details, please try again", Toast.LENGTH_SHORT).show();
@@ -234,14 +270,14 @@ public class AdminEditProductsActivity extends AppCompatActivity {
         startActivityForResult(galleryIntent, GalleryPick);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GalleryPick && resultCode == RESULT_OK && data != null){
-            imageUri = data.getData();
-            InputProductImage.setImageURI(imageUri);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == GalleryPick && resultCode == RESULT_OK && data != null){
+//            imageUri = data.getData();
+//            InputProductImage.setImageURI(imageUri);
+//        }
+//    }
 
 //    private void saveProductInfoToDatabase() {
 //        HashMap<String, Object> productMap = new HashMap<>();

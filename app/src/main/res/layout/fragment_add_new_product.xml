@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddNewProductFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Pick product image"/>
+
+            <ImageView
+                android:id="@+id/select_product_image"
+                android:layout_width="350dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="10dp"
+                android:cropToPadding="false"
+                android:src="@android:drawable/ic_menu_camera"/>
+
+            <EditText
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/select_product_image"
+                android:inputType="text"
+                android:padding="20dp"
+                android:hint="Product Name"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"/>
+
+            <EditText
+                android:id="@+id/product_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/product_name"
+                android:inputType="textMultiLine"
+                android:padding="20dp"
+                android:hint="Product Description"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"/>
+
+            <EditText
+                android:id="@+id/product_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/product_description"
+                android:padding="20dp"
+                android:inputType="number"
+                android:hint="Product Price"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"/>
+
+            <EditText
+                android:id="@+id/discount_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/product_price"
+                android:padding="20dp"
+                android:inputType="number"
+                android:hint='Discount Price(If any)'
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"/>
+
+            <TextView
+                android:id="@+id/select_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Category"
+                android:padding="15dp"
+                android:textSize="18sp"
+                android:layout_marginStart="45dp"
+                android:layout_below="@id/discount_price"/>
+
+            <RadioGroup
+                android:id="@+id/group"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/select_category">
+
+                <RadioButton
+                    android:id="@+id/bags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Bags"
+                    />
+                <RadioButton
+                    android:id="@+id/beauty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Beauty Products"
+                    />
+                <RadioButton
+                    android:id="@+id/books_and_stationery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Books and Stationery"
+                    />
+                <RadioButton
+                    android:id="@+id/clothing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Clothing"
+                    />
+                <RadioButton
+                    android:id="@+id/edibles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Edibles"
+                    />
+                <RadioButton
+                    android:id="@+id/electronics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Electronics"
+                    />
+                <RadioButton
+                    android:id="@+id/laptops"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Laptops"
+                    />
+                <RadioButton
+                    android:id="@+id/laptop_accessories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Laptop Accessories"
+                    />
+                <RadioButton
+                    android:id="@+id/mobile_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Mobile Phones"
+                    />
+                <RadioButton
+                    android:id="@+id/phone_accessory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Mobile Phone Accessories"
+                    />
+                <RadioButton
+                    android:id="@+id/pharmaceuticals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Pharmaceuticals"
+                    />
+                <RadioButton
+                    android:id="@+id/shoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Shoes"
+                    />
+                <RadioButton
+                    android:id="@+id/wristwatch_and_other"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Wrist Watches and other Accessories"
+                    />
+                <RadioButton
+                    android:id="@+id/others"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="Others"
+                    />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/add_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group"
+                android:layout_marginLeft="45dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="45dp"
+                android:padding="17dp"
+                android:text="Upload Product"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/colorAccent"
+                android:background="@drawable/button_border"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

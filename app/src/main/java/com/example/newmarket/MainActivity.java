@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment settingFragment;
     private Fragment categoryFragment;
     private Fragment cart_fragment;
+    public static int totalPrice = 0;
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Paper.init(this);
+        recyclerView = findViewById(R.id.search);
         home_fragment = new HomeFragment();
         settingFragment = new SettingsFragment();
         categoryFragment = new CategoriesFragment();
@@ -71,22 +73,22 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()){
-                    case R.id.nav_home:
-                        replaceFragment(home_fragment);
-                        return true;
-                    case R.id.nav_cart:
-                        startActivity(new Intent(MainActivity.this, CartActivity.class));
-                        return true;
-                    case R.id.nav_settings:
-                        replaceFragment(settingFragment);
-                        return true;
-                    case R.id.nav_categories:
-                        replaceFragment(categoryFragment);
-                        return true;
-                    default:
-                        return false;
-                }
+            switch(menuItem.getItemId()){
+                case R.id.nav_home:
+                    replaceFragment(home_fragment);
+                    return true;
+                case R.id.nav_cart:
+                    replaceFragment(cart_fragment);
+                    return true;
+                case R.id.nav_settings:
+                    replaceFragment(settingFragment);
+                    return true;
+                case R.id.nav_categories:
+                    replaceFragment(categoryFragment);
+                    return true;
+                default:
+                    return false;
+            }
             }
         });
 
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         profileImageView = headerView.findViewById(R.id.user_profile_image);
 
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
-        //recyclerView = findViewById(R.id.recycler_menu);
+//         recyclerView = findViewById(R.id.recycler_menu);
 //        recyclerView.setHasFixedSize(true);
 //        layoutManager = new GridLayoutManager(MainActivity.this, 2);
 //        recyclerView.setLayoutManager(layoutManager);
@@ -160,17 +162,11 @@ public class MainActivity extends AppCompatActivity
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                        if(type.equals("Admin")){
-                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-                            intent.putExtra("pid", model.getPid());
-                            startActivity(intent);
-                        }
-                        else{
-                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-                            intent.putExtra("pid", model.getPid());
-                            startActivity(intent);
-                        }
-
+                            Bundle bundle = new Bundle();
+                            bundle.putString("pid", model.getPid());
+                            Fragment frag = new ProductDetailFragment();
+                            frag.setArguments(bundle);
+                            replaceFragment(frag);
                         }
                     });
 
@@ -183,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                     return new ProductViewHolder(view);
                 }
             };
-        recyclerView.setAdapter(adapter);
+        HomeFragment.recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
 
@@ -191,53 +187,8 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_framelayout, fragment);
         fragmentTransaction.commit();
+        fragment.onDestroy();
     }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        FirebaseRecyclerOptions<Products> options =
-//        new FirebaseRecyclerOptions.Builder<Products>()
-//        .setQuery(productRef, Products.class)
-//        .build();
-//
-//        FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
-//            new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options){
-//                @Override
-//                protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
-//                    holder.textProductName.setText(model.getProduct_Name());
-//                    holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
-//                    Picasso.get().load(model.getImage()).into(holder.imageView);
-//
-//                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                        if(type.equals("Admin")){
-//                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-//                            intent.putExtra("pid", model.getPid());
-//                            startActivity(intent);
-//                        }
-//                        else{
-//                            Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-//                            intent.putExtra("pid", model.getPid());
-//                            startActivity(intent);
-//                        }
-//
-//                        }
-//                    });
-//
-//                }
-//
-//                @NonNull
-//                @Override
-//                public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-//                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout, parent, false);
-//                    return new ProductViewHolder(view);
-//                }
-//            };
-//            recyclerView.setAdapter(adapter);
-//            adapter.startListening();
-//    }
 
     @Override
     public void onBackPressed() {
@@ -259,17 +210,33 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+//                Bundle bundle = new Bundle();
+//                bundle.putString("Query", query);
+//                Fragment goToFragment = new SearchFrgament();
+//                goToFragment.setArguments(bundle);
+//                replaceFragment(new SearchFrgament(), R.id.main_framelayout);
                 firebasesearch(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+//                Bundle bundle = new Bundle();
+//                bundle.putString("Query", newText);
+//                Fragment goToFragment = new SearchFrgament();
+//                goToFragment.setArguments(bundle);
+//                replaceFragment(new SearchFrgament(), R.id.main_framelayout);
                 firebasesearch(newText);
                 return false;
             }
         });
         return true;
+    }
+
+    private void replaceFragment(Fragment toFragment, int frameLayout){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(frameLayout, toFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -293,21 +260,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_cart)
-        {
-            Intent intent = new Intent(MainActivity.this, CartActivity.class);
-            startActivity(intent);
-        }
-        else if (id == R.id.nav_categories)
-        {
-            startActivity(new Intent(MainActivity.this, CategoryActivity.class));
-        }
-        else if (id == R.id.nav_settings)
-        {
-            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-            startActivity(intent);
-        }
-        else if (id == R.id.nav_logout)
+        if (id == R.id.nav_logout)
         {
             Paper.book().destroy();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);

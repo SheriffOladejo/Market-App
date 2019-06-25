@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -25,6 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,15 +43,16 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private String categoryName, vendor, downloadImageUrl, Description, Discount, productID, Price, ProductName, saveCurrentDate, saveCurrentTime;
     private Button AddNewProductButton;
     private ImageView InputProductImage;
-    private EditText InputProductName, InputProductDesc, InputProductPrice, discount;
-    private static final int GalleryPick = 1;
-    private Uri imageUri;
+    private EditText InputProductName, InputProductDesc, InputProductPrice, Disount_price;
+    private RadioGroup radioGroup;
+    private Uri imageUri = null;
     private StorageReference productImagesRef;
     private StorageReference filePath;
     private DatabaseReference productRef, specificProductRef, vendorProductsRef;
     private ProgressDialog progress;
     private HashMap<String, Object> productMap;
     private Bitmap compressedImageFile;
+    private byte[] datum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,18 +60,17 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_add_new_product);
 
         AddNewProductButton = findViewById(R.id.add_button);
+        radioGroup = findViewById(R.id.group);
         InputProductName = findViewById(R.id.product_name);
         InputProductDesc = findViewById(R.id.product_description);
         InputProductPrice = findViewById(R.id.product_price);
+        Disount_price = findViewById(R.id.discount_price);
         InputProductImage = findViewById(R.id.select_product_image);
         progress = new ProgressDialog(this);
-        discount = findViewById(R.id.discount);
-        categoryName = getIntent().getExtras().get("category").toString();
         vendor = LoginActivity.currentOnlineVendor.getPhone();
 
         productImagesRef = FirebaseStorage.getInstance().getReference().child("Product images");
         productRef = FirebaseDatabase.getInstance().getReference().child("Products");
-        specificProductRef = FirebaseDatabase.getInstance().getReference().child(categoryName);
         vendorProductsRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
 
         InputProductImage.setOnClickListener(new View.OnClickListener() {
@@ -90,12 +93,40 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         Description = InputProductDesc.getText().toString();
         Price = InputProductPrice.getText().toString();
         ProductName = InputProductName.getText().toString().toLowerCase();
+        int categoryID = radioGroup.getCheckedRadioButtonId();
+        if(categoryID == R.id.bags)
+            categoryName = "Bags";
+        else if(categoryID == R.id.beauty)
+            categoryName = "Beauty Products";
+        else if(categoryID == R.id.books_and_stationery)
+            categoryName = "Books and Stationery";
+        else if(categoryID == R.id.clothing)
+            categoryName = "Clothing";
+        else if(categoryID == R.id.edibles)
+            categoryName = "Edibles";
+        else if(categoryID == R.id.electronics)
+            categoryName = "Electronics";
+        else if(categoryID == R.id.laptops)
+            categoryName = "Laptops";
+        else if(categoryID == R.id.laptop_accessories)
+            categoryName = "Laptop Accessories";
+        else if(categoryID == R.id.phone_accessory)
+            categoryName = "Phone Accessories";
+        else if(categoryID == R.id.pharmaceuticals)
+            categoryName = "Pharmaceuticals";
+        else if(categoryID == R.id.shoes)
+            categoryName = "Shoes";
+        else if(categoryID == R.id.wristwatch_and_other)
+            categoryName = "Wrist Watches and other accessories";
+        else if(categoryID == R.id.others)
+            categoryName = "Others";
+        specificProductRef = FirebaseDatabase.getInstance().getReference().child(categoryName);
 
-        if(TextUtils.isEmpty(discount.getText().toString())){
+        if(TextUtils.isEmpty(Disount_price.getText().toString())){
             Discount = "0";
         }
         else{
-            Discount = discount.getText().toString();
+            Discount = Disount_price.getText().toString();
         }
         if(imageUri == null){
             Toast.makeText(this, "Product image is mandatory", Toast.LENGTH_SHORT).show();
@@ -138,8 +169,22 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
 //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //        compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 //        byte[] thumbnail = baos.toByteArray();
+        File newImageFile = new File(imageUri.getPath());
+        try{
+            compressedImageFile = new Compressor(AdminAddNewProductActivity.this)
+                    .setMaxHeight(200)
+                    .setMaxWidth(200)
+                    .setQuality(6)
+                    .compressToBitmap(newImageFile);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        datum = baos.toByteArray();
         filePath = productImagesRef.child(categoryName).child(imageUri.getLastPathSegment() + productID + ".jpg");
-        final UploadTask uploadTask = filePath.putFile(imageUri);
+        final UploadTask uploadTask = filePath.putBytes(datum);
 
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -240,18 +285,26 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     }
 
     private void openGallery() {
-        Intent galleryIntent = new Intent();
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, GalleryPick);
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1,1)
+                .start(AdminAddNewProductActivity.this);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GalleryPick && resultCode == RESULT_OK && data != null){
-            imageUri = data.getData();
-            InputProductImage.setImageURI(imageUri);
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode== RESULT_OK){
+                imageUri = result.getUri();
+                InputProductImage.setImageURI(imageUri);
+            }
+            else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                Exception error = result.getError();
+            }
+
         }
     }
 

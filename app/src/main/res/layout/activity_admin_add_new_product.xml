@@ -14,12 +14,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Pick product image"/>
+
             <ImageView
                 android:id="@+id/select_product_image"
                 android:layout_width="350dp"
                 android:layout_height="200dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="10dp"
@@ -31,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/select_product_image"
-            android:inputType="textMultiLine"
+            android:inputType="text"
             android:padding="20dp"
             android:hint="Product Name"
             android:layout_marginLeft="45dp"
@@ -61,39 +68,145 @@
             android:layout_marginLeft="45dp"
             android:layout_marginRight="45dp"/>
 
-        <RelativeLayout
-            android:id="@+id/rl"
+        <EditText
+            android:id="@+id/discount_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/product_price">
+            android:layout_below="@+id/product_price"
+            android:padding="20dp"
+            android:inputType="number"
+            android:hint='Discount Price(If any)'
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/select_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Category"
+            android:padding="15dp"
+            android:textSize="18sp"
+            android:layout_marginStart="45dp"
+            android:layout_below="@id/discount_price"/>
+
+        <RadioGroup
+            android:id="@+id/group"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_category">
+
+            <RadioButton
+                android:id="@+id/bags"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_marginStart="45dp"
-                android:layout_marginTop="6dp"
-                android:text="Discount: %" />
-
-            <EditText
-                android:id="@+id/discount"
-                android:layout_width="wrap_content"
+                android:text="Bags"
+                />
+            <RadioButton
+                android:id="@+id/beauty"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="127dp"
-                android:inputType="number" />
-
-        </RelativeLayout>
+                android:layout_marginStart="45dp"
+                android:text="Beauty Products"
+                />
+            <RadioButton
+                android:id="@+id/books_and_stationery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Books and Stationery"
+                />
+            <RadioButton
+                android:id="@+id/clothing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Clothing"
+                />
+            <RadioButton
+                android:id="@+id/edibles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Edibles"
+                />
+            <RadioButton
+                android:id="@+id/electronics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Electronics"
+                />
+            <RadioButton
+                android:id="@+id/laptops"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Laptops"
+                />
+            <RadioButton
+                android:id="@+id/laptop_accessories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Laptop Accessories"
+                />
+            <RadioButton
+                android:id="@+id/mobile_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Mobile Phones"
+                />
+            <RadioButton
+                android:id="@+id/phone_accessory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Mobile Phone Accessories"
+                />
+            <RadioButton
+                android:id="@+id/pharmaceuticals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Pharmaceuticals"
+                />
+            <RadioButton
+                android:id="@+id/shoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Shoes"
+                />
+            <RadioButton
+                android:id="@+id/wristwatch_and_other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Wrist Watches and other Accessories"
+                />
+            <RadioButton
+                android:id="@+id/others"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text="Others"
+                />
+        </RadioGroup>
 
         <Button
             android:id="@+id/add_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rl"
+            android:layout_below="@+id/group"
             android:layout_marginLeft="45dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="45dp"
             android:padding="17dp"
-            android:text="Add Product"
+            android:text="Upload Product"
             android:textAllCaps="false"
             android:backgroundTint="@color/colorAccent"
             android:background="@drawable/button_border"

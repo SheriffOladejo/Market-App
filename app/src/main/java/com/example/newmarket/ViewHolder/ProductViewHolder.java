@@ -10,7 +10,7 @@ import com.example.newmarket.R;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public TextView textProductName, textProductDescription, textProductPrice, vendor, discount;
+    public TextView textProductName, discountPrice, textVendorName, textProductDescription, textProductPrice, vendor, discount;
     public ImageView imageView;
     public ItemClickListener listener;
 
@@ -25,6 +25,9 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         textProductDescription = itemView.findViewById(R.id.product_description);
         textProductName = itemView.findViewById(R.id.product_name);
         textProductPrice = itemView.findViewById(R.id.product_price);
+        textVendorName = itemView.findViewById(R.id.soldBy);
+        discountPrice = itemView.findViewById(R.id.discount);
+
     }
 
     public void setItemClickListener(ItemClickListener listener){

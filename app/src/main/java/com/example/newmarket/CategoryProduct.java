@@ -1,9 +1,12 @@
 package com.example.newmarket;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,31 +22,36 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-public class ShoesActivity extends AppCompatActivity {
+public class CategoryProduct extends Fragment {
 
     private RecyclerView recyclerView;
     private DatabaseReference productRef;
     private RecyclerView.LayoutManager layoutManager;
     private Toolbar toolbar;
+    String category;
+    private Fragment fragment= new ProductDetailFragment();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shoes);
-
-        productRef = FirebaseDatabase.getInstance().getReference().child("Products").child("Shoes");
-        recyclerView = findViewById(R.id.shoe_recyclerview);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(ShoesActivity.this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-
-        toolbar = findViewById(R.id.shoe_toolbar);
-        toolbar.setTitle("Shoes");
+    public CategoryProduct() {
+        // Required empty public constructor
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_category_product, container, false);
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            category = bundle.getString("value");
+        }
+        productRef = FirebaseDatabase.getInstance().getReference().child("Products").child(category);
+        recyclerView = view.findViewById(R.id.bags_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+
+        toolbar = view.findViewById(R.id.bags_toolbar);
+        toolbar.setTitle(category);
+
         FirebaseRecyclerOptions<Products> options =
                 new FirebaseRecyclerOptions.Builder<Products>()
                         .setQuery(productRef, Products.class)
@@ -62,11 +70,7 @@ public class ShoesActivity extends AppCompatActivity {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(ShoesActivity.this, ProductDetailActivity.class);
-                                intent.putExtra("pid", model.getPid());
-                                startActivity(intent);
-
-
+                                replaceFragment(fragment);
                             }
                         });
 
@@ -81,5 +85,12 @@ public class ShoesActivity extends AppCompatActivity {
                 };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+        return view;
     }
+    private void replaceFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_framelayout, fragment);
+        fragmentTransaction.commit();
+    }
+
 }

@@ -38,7 +38,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         toolbar = findViewById(R.id.admin_maintain_products_toolbar);
-        toolbar.setTitle("Mobile Phones");
+        toolbar.setTitle("My Products");
     }
 
     @Override
@@ -64,6 +64,11 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminEditProductsActivity.class);
                                 intent.putExtra("pid", model.getPid());
+                                intent.putExtra("Image", model.getImage());
+                                intent.putExtra("Product Name", model.getProduct_Name());
+                                intent.putExtra("Price", model.getPrice());
+                                intent.putExtra("Discount", model.getDiscount());
+                                intent.putExtra("Description", model.getDescription());
                                 startActivity(intent);
 
 

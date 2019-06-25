@@ -1,12 +1,11 @@
 package com.example.newmarket;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,31 +18,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-public class BooksAndStationeriesActivity extends AppCompatActivity {
+public class MaintainProductsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private DatabaseReference productRef;
     private RecyclerView.LayoutManager layoutManager;
-    private Toolbar toolbar;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_books_and_stationeries);
-
-        productRef = FirebaseDatabase.getInstance().getReference().child("Products").child("Books and Stationery");
-        recyclerView = findViewById(R.id.books_recyclerview);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(BooksAndStationeriesActivity.this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-
-        toolbar = findViewById(R.id.books_toolbar);
-        toolbar.setTitle("Books/Stationery");
+    public MaintainProductsFragment() {
+        // Required empty public constructor
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_maintain_products, container, false);
+        productRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Products");
+        recyclerView = view.findViewById(R.id.maintain_products_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+
         FirebaseRecyclerOptions<Products> options =
                 new FirebaseRecyclerOptions.Builder<Products>()
                         .setQuery(productRef, Products.class)
@@ -54,19 +48,19 @@ public class BooksAndStationeriesActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
                         holder.textProductName.setText(model.getProduct_Name());
-                        holder.textProductDescription.setText(model.getDescription());
                         holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
-                        holder.vendor.setText("Vendor: " + model.getVendor());
                         Picasso.get().load(model.getImage()).into(holder.imageView);
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(BooksAndStationeriesActivity.this, ProductDetailActivity.class);
-                                intent.putExtra("pid", model.getPid());
-                                startActivity(intent);
-
-
+                            HomeFragment.passDataToFragment("pid", model.getPid());
+                            HomeFragment.passDataToFragment("Image", model.getImage());
+                            HomeFragment.passDataToFragment("Product Name", model.getProduct_Name());
+                            HomeFragment.passDataToFragment("Price", model.getPrice());
+                            HomeFragment.passDataToFragment("Discount", model.getDiscount());
+                            HomeFragment.passDataToFragment("Description", model.getDescription());
+                            replaceFragment(new EditProductFragment(), R.id.vendor_frameLayout);
                             }
                         });
 
@@ -81,5 +75,13 @@ public class BooksAndStationeriesActivity extends AppCompatActivity {
                 };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+        return view;
     }
+
+    private void replaceFragment(Fragment toFragment, int frameLayout){
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(frameLayout, toFragment);
+        fragmentTransaction.commit();
+    }
+
 }

@@ -22,7 +22,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginTop="2dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerInside" />
 
         <TextView
             android:id="@+id/product_name"

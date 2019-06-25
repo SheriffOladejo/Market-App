@@ -1,12 +1,10 @@
 package com.example.newmarket;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,58 +13,53 @@ import com.example.newmarket.Model.Products;
 import com.example.newmarket.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-public class ClothingsActivity extends AppCompatActivity {
+import static com.example.newmarket.MainActivity.convertFirstLetter;
 
+public class SearchFrgament extends Fragment {
+
+    private String query;
     private RecyclerView recyclerView;
-    private DatabaseReference productRef;
-    private RecyclerView.LayoutManager layoutManager;
-    private Toolbar toolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clothings);
-
-        productRef = FirebaseDatabase.getInstance().getReference().child("Products").child("Clothing");
-        recyclerView = findViewById(R.id.clothing_recyclerview);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(ClothingsActivity.this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-
-        toolbar = findViewById(R.id.clothing_toolbar);
-        toolbar.setTitle("Clothing");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search_frgament, container, false);
+        recyclerView = view.findViewById(R.id.search);
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            query = bundle.getString("Query");
+        }
+        firebasesearch(query);
+        return view;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    // Search data
+    private void firebasesearch(String searchText){
+        Query firebaseSearchQuery = FirebaseDatabase.getInstance().getReference().child("Products").orderByChild("Product_Name").startAt(searchText).endAt(searchText + "\uf8ff");
+
         FirebaseRecyclerOptions<Products> options =
                 new FirebaseRecyclerOptions.Builder<Products>()
-                        .setQuery(productRef, Products.class)
+                        .setQuery(firebaseSearchQuery, Products.class)
                         .build();
 
         FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options){
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model){
-                        holder.textProductName.setText(model.getProduct_Name());
-                        holder.textProductDescription.setText(model.getDescription());
+                        holder.textProductName.setText(convertFirstLetter(model.getProduct_Name()));
                         holder.textProductPrice.setText("Price: " + "#" + model.getPrice());
-                        holder.vendor.setText("Vendor: " + model.getVendor());
                         Picasso.get().load(model.getImage()).into(holder.imageView);
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(ClothingsActivity.this, ProductDetailActivity.class);
-                                intent.putExtra("pid", model.getPid());
-                                startActivity(intent);
-
-
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    intent.putExtra("pid", model.getPid());
+                                    startActivity(intent);
                             }
                         });
 
@@ -82,4 +75,5 @@ public class ClothingsActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
+
 }

@@ -5,6 +5,7 @@ public class Products {
     private String Description;
     private String Price;
     private String Vendor;
+    private String Vendor_Phone;
     private String Image;
     private String Category;
     private String pid;
@@ -12,11 +13,20 @@ public class Products {
     private String Time;
     private String Discount;
 
-    public String getDiscount() {
-        return Discount;
+    public Products() {
     }
 
-    public void setDiscount(String discount) {
+    public Products(String product_Name, String description, String price, String vendor, String vendor_Phone, String image, String category, String pid, String date, String time, String discount) {
+        Product_Name = product_Name;
+        Description = description;
+        Price = price;
+        Vendor = vendor;
+        Vendor_Phone = vendor_Phone;
+        Image = image;
+        Category = category;
+        this.pid = pid;
+        Date = date;
+        Time = time;
         Discount = discount;
     }
 
@@ -50,6 +60,14 @@ public class Products {
 
     public void setVendor(String vendor) {
         Vendor = vendor;
+    }
+
+    public String getVendor_Phone() {
+        return Vendor_Phone;
+    }
+
+    public void setVendor_Phone(String vendor_Phone) {
+        Vendor_Phone = vendor_Phone;
     }
 
     public String getImage() {
@@ -92,19 +110,11 @@ public class Products {
         Time = time;
     }
 
-    public Products(String product_Name, String description, String price, String vendor, String image, String category, String pid, String date, String time) {
-        Product_Name = product_Name;
-        Description = description;
-        Price = price;
-        Vendor = vendor;
-        Image = image;
-        Category = category;
-        this.pid = pid;
-        Date = date;
-        Time = time;
+    public String getDiscount() {
+        return Discount;
     }
 
-    public Products(){
-
+    public void setDiscount(String discount) {
+        Discount = discount;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.newmarket.Model;
 
 public class Cart {
+    private String Total_Price;
     private String pid;
     private String Product_Name;
     private String Price;
@@ -12,7 +13,8 @@ public class Cart {
     private String Buyer_Name;
     private String Extra_Details;
 
-    public Cart(String pid, String extra_Details, String product_Name, String price, String quantity, String discount, String orderID, String vendor, String buyer_Phone_Number, String buyer_Name) {
+    public Cart(String total_Price, String pid, String product_Name, String price, String quantity, String discount, String orderID, String vendor, String buyer_Phone_Number, String buyer_Name, String extra_Details) {
+        Total_Price = total_Price;
         this.pid = pid;
         Product_Name = product_Name;
         Price = price;
@@ -25,14 +27,15 @@ public class Cart {
         Extra_Details = extra_Details;
     }
 
-    public Cart(){}
-
-    public String getExtra_Details() {
-        return Extra_Details;
+    public Cart() {
     }
 
-    public void setExtra_Details(String extra_Details) {
-        Extra_Details = extra_Details;
+    public String getTotal_Price() {
+        return Total_Price;
+    }
+
+    public void setTotal_Price(String total_Price) {
+        Total_Price = total_Price;
     }
 
     public String getPid() {
@@ -105,6 +108,14 @@ public class Cart {
 
     public void setBuyer_Name(String buyer_Name) {
         Buyer_Name = buyer_Name;
+    }
+
+    public String getExtra_Details() {
+        return Extra_Details;
+    }
+
+    public void setExtra_Details(String extra_Details) {
+        Extra_Details = extra_Details;
     }
 }
 

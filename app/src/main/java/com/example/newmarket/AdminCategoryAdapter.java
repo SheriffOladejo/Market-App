@@ -54,7 +54,7 @@ public class AdminCategoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             textView = itemView.findViewById(R.id.text);
             imageView = itemView.findViewById(R.id.image);
-            cardView = itemView.findViewById(R.id.card);
+            //cardView = itemView.findViewById(R.id.card);
         }
 
         @Override

@@ -1,12 +1,9 @@
 package com.example.newmarket.Model;
 
 public class AdminOrders {
-    private String Address, City, Date, Name, Phone, State, Time, Total_Amount, Extras;
+    private String Address, City, Date, Name, Phone, State, Time, Total_Amount, Extras, PID;
 
-    public AdminOrders() {
-    }
-
-    public AdminOrders(String address, String extras, String city, String date, String name, String phone, String state, String time, String total_Amount) {
+    public AdminOrders(String address, String city, String date, String name, String phone, String state, String time, String total_Amount, String extras, String PID) {
         Address = address;
         City = city;
         Date = date;
@@ -16,15 +13,10 @@ public class AdminOrders {
         Time = time;
         Total_Amount = total_Amount;
         Extras = extras;
-
+        this.PID = PID;
     }
 
-    public String getExtras() {
-        return Extras;
-    }
-
-    public void setExtras(String extras) {
-        Extras = extras;
+    public AdminOrders() {
     }
 
     public String getAddress() {
@@ -89,5 +81,21 @@ public class AdminOrders {
 
     public void setTotal_Amount(String total_Amount) {
         Total_Amount = total_Amount;
+    }
+
+    public String getExtras() {
+        return Extras;
+    }
+
+    public void setExtras(String extras) {
+        Extras = extras;
+    }
+
+    public String getPID() {
+        return PID;
+    }
+
+    public void setPID(String PID) {
+        this.PID = PID;
     }
 }

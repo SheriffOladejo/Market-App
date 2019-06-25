@@ -8,74 +8,164 @@
     android:layout_height="match_parent"
     tools:context=".ConfirmFinalOrder">
 
-    <TextView
-        android:id="@+id/text"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Please confirm your shipment details"
-        android:textSize="18dp"
-        android:textColor="@color/black"
-        android:layout_margin="25dp"
-        android:textStyle="bold"/>
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/shipment_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text"
-        android:textColor="@color/black"
-        android:layout_marginTop="60dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:hint="Receiver's Name"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/shipment_phone_number"
-        android:layout_width="match_parent"
-        android:inputType="number"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:layout_below="@id/shipment_name"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:hint="Receiver's Phone Number"/>
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="18dp"
+                android:text="Please confirm your shipment details"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/shipment_address"
-        android:layout_width="match_parent"
-        android:inputType="textPostalAddress"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:layout_below="@id/shipment_phone_number"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:hint="Destination Address"/>
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="10dp"
+                android:text="Total Price: "
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/confirm_final_order_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:text="Confirm order"
-        android:background="@drawable/button_border"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/colorAccent"
-        android:textSize="20dp"/>
+            <TextView
+                android:id="@+id/delivery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="25dp"
+                android:text="Delivery Charge:"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/shipment_address"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="55dp"
-        android:text="Notice: Deliveries are restricted to Ile-Ife only. There will be no refunds for deliveries directed outside Ile-Ife."
-        android:textColor="@color/black"
-        android:textStyle="bold" />
+            <EditText
+                android:id="@+id/shipment_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:hint="Receiver's Name"
+                android:textColor="@color/black" />
 
+            <EditText
+                android:id="@+id/shipment_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:hint="Receiver's Phone Number"
+                android:inputType="number"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/shipment_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:hint="Destination Institution"
+                android:inputType="textPostalAddress"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/landmark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:hint="Landmark(Any popular building/structure)"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/provide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Provide card details"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/confirm_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:hint="Card Number"
+                android:inputType="number"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/confirm_card_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:hint="Year of Expiration"
+                android:inputType="number"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/confirm_card_month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:hint="Month of Expiration"
+                android:inputType="number"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/confirm_card_cvv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:hint="CVV"
+                android:inputType="number"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/confirm_final_order_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/button_border"
+                android:backgroundTint="@color/colorAccent"
+                android:text="Confirm order"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

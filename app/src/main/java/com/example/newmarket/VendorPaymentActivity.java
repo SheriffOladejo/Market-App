@@ -1,36 +1,22 @@
 package com.example.newmarket;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.newmarket.Prevalent.Prevalent;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import co.paystack.android.Paystack;
 import co.paystack.android.PaystackSdk;
@@ -38,18 +24,9 @@ import co.paystack.android.Transaction;
 import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
-import io.paperdb.Paper;
 
-import static com.example.newmarket.ProductDetailFragment.cartMap;
+public class VendorPaymentActivity extends AppCompatActivity {
 
-public class ConfirmFinalOrder extends AppCompatActivity {
-
-    private EditText nameEditText, phoneEditText, addressEditText, landmarkEditText;
-    private TextView totalPrice;
-    private Button confirmOrderButton;
-    private RelativeLayout relativeLayout;
-    private String totalAmount = "";
-    private String phone = "";
     // To get started quickly, change this to your heroku deployment of
     // https://github.com/PaystackHQ/sample-charge-card-backend
     // Step 1. Visit https://github.com/PaystackHQ/sample-charge-card-backend
@@ -65,7 +42,6 @@ public class ConfirmFinalOrder extends AppCompatActivity {
     EditText mEditCVC;
     EditText mEditExpiryMonth;
     EditText mEditExpiryYear;
-    private int amount;
 
     //TextView mTextError;
     //TextView mTextBackendMessage;
@@ -75,40 +51,11 @@ public class ConfirmFinalOrder extends AppCompatActivity {
     private Charge charge;
     private Transaction transaction;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_confirm_final_order);
-
-        String userphone = LoginActivity.currentOnlineUser.getPhone();
-        phone = userphone;
-        relativeLayout = findViewById(R.id.confirm_final_order_relativeLayout);
-        totalAmount = getIntent().getStringExtra("Total Price");
-        amount = Integer.valueOf(totalAmount);
-
-        confirmOrderButton = findViewById(R.id.confirm_final_order_btn);
-        nameEditText = findViewById(R.id.shipment_name);
-        addressEditText = findViewById(R.id.shipment_address);
-        phoneEditText = findViewById(R.id.shipment_phone_number);
-        landmarkEditText = findViewById(R.id.landmark);
-        totalPrice = findViewById(R.id.price);
-        mEditCardNum = findViewById(R.id.confirm_card_number);
-        mEditCVC = findViewById(R.id.confirm_card_cvv);
-        mEditExpiryMonth = findViewById(R.id.confirm_card_month);
-        mEditExpiryYear = findViewById(R.id.confirm_card_year);
-
-        totalPrice.setText("Total Price: " + "#" + totalAmount);
-
-        nameEditText.setText(LoginActivity.currentOnlineUser.getFirstname() + " " + LoginActivity.currentOnlineUser.getLastname());
-        addressEditText.setText(LoginActivity.currentOnlineUser.getAddress());
-        phoneEditText.setText(LoginActivity.currentOnlineUser.getPhone());
-
-        confirmOrderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                check();
-            }
-        });
+        setContentView(R.layout.activity_vendor_payment);
 
         if (BuildConfig.DEBUG && (backend_url.equals(""))) {
             throw new AssertionError("Please set a backend url before running the sample");
@@ -119,7 +66,12 @@ public class ConfirmFinalOrder extends AppCompatActivity {
 
         PaystackSdk.setPublicKey(paystack_public_key);
 
-        Button mButtonPerformTransaction = findViewById(R.id.confirm_final_order_btn);
+        mEditCardNum = findViewById(R.id.card_number);
+        mEditCVC = findViewById(R.id.cvv);
+        mEditExpiryMonth = findViewById(R.id.expiry_month);
+        mEditExpiryYear = findViewById(R.id.expiry_year);
+
+        Button mButtonPerformTransaction = findViewById(R.id.create_account);
         //Button mButtonPerformLocalTransaction = findViewById(R.id.button_perform_local_transaction);
 
         //mTextError = findViewById(R.id.textview_error);
@@ -128,111 +80,32 @@ public class ConfirmFinalOrder extends AppCompatActivity {
 
         //initialize sdk
         PaystackSdk.initialize(getApplicationContext());
-//
-//        //set click listener
-//        mButtonPerformTransaction.setOnClickListener(new View.OnClickListener() {
+
+        //set click listener
+        mButtonPerformTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                try {
+                    startAFreshCharge(false);
+                } catch (Exception e) {
+                    Toast.makeText(VendorPaymentActivity.this, "Error encountered, please try again", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+//        mButtonPerformLocalTransaction.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
 //
 //                try {
-//                    startAFreshCharge(false);
+//                    startAFreshCharge(true);
 //                } catch (Exception e) {
-//                    Toast.makeText(ConfirmFinalOrder.this, "Error encountered, please try again", Toast.LENGTH_SHORT).show();
+//                    MainActivity.this.mTextError.setText(String.format("An error occurred while charging card: %s %s", e.getClass().getSimpleName(), e.getMessage()));
+//
 //                }
 //            }
 //        });
-    }
-
-    private void check() {
-        if(TextUtils.isEmpty(nameEditText.getText().toString())
-                || TextUtils.isEmpty(addressEditText.getText().toString())
-                || TextUtils.isEmpty(phoneEditText.getText().toString())
-                || TextUtils.isEmpty(addressEditText.getText().toString())){
-            Toast.makeText(ConfirmFinalOrder.this, "All fields must be filled", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            confirmOrder();
-        }
-    }
-
-    private void confirmOrder() {
-        try {
-            startAFreshCharge(false);
-        } catch (Exception e) {
-            Toast.makeText(ConfirmFinalOrder.this, "Error encountered, please try again", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-        notifyVendors();
-        final String saveCurrentDate;
-        final String saveCurrentTime;
-        Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calForDate.getTime());
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime = currentTime.format(calForDate.getTime());
-
-        final DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference()
-        .child("Orders")
-        .child(phone).child("Delivery Details");
-
-        HashMap<String, Object> ordersMap = new HashMap<>();
-        ordersMap.put("Total_Amount", totalAmount);
-        ordersMap.put("Name", nameEditText.getText().toString());
-        ordersMap.put("Phone", phoneEditText.getText().toString());
-        ordersMap.put("Date", saveCurrentDate);
-        ordersMap.put("Time", saveCurrentTime);
-        ordersMap.put("Address", addressEditText.getText().toString());
-        //ordersMap.put("State", "Not shipped");
-
-        final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        cartListRef.child(LoginActivity.currentOnlineUser.getPhone())
-        .child("Cart").removeValue();
-
-        ordersRef.updateChildren(ordersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-            if(task.isSuccessful()){
-                FirebaseDatabase.getInstance().getReference().child("Users")
-                    .child(LoginActivity.currentOnlineUser.getPhone())
-                    .child("Cart")
-                    .removeValue()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            useSnackBar("Order placed successfully");
-                            Toast.makeText(ConfirmFinalOrder.this, "Order placed successfully", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(ConfirmFinalOrder.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
-                        }
-                        }
-                    });
-            }
-            else{
-                Toast.makeText(ConfirmFinalOrder.this, "Unable to confirm order, please try again", Toast.LENGTH_SHORT).show();
-            }
-            }
-        });
-
-    }
-
-    private void notifyVendors() {
-        for(String x : ProductDetailFragment.vendors){
-            DatabaseReference notif = FirebaseDatabase.getInstance().getReference().child(x).child("New Orders");
-            notif.setValue("New Order");
-            DatabaseReference vendor = FirebaseDatabase.getInstance().getReference().child("Vendors");
-            vendor.child(x).child("Orders").updateChildren(cartMap);
-        }
-    }
-
-    private void useSnackBar(String snackBarMessage) {
-        Snackbar snackbar = Snackbar.make(relativeLayout, snackBarMessage, Snackbar.LENGTH_SHORT);
-        View snackView = snackbar.getView();
-        TextView textView = snackView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(Color.WHITE);
-        snackbar.show();
     }
 
     private void startAFreshCharge(boolean local) {
@@ -240,7 +113,7 @@ public class ConfirmFinalOrder extends AppCompatActivity {
         charge = new Charge();
         charge.setCard(loadCardFromForm());
 
-        dialog = new ProgressDialog(ConfirmFinalOrder.this);
+        dialog = new ProgressDialog(VendorPaymentActivity.this);
         dialog.setMessage("Performing transaction... please wait");
         dialog.show();
 
@@ -249,11 +122,11 @@ public class ConfirmFinalOrder extends AppCompatActivity {
             // are only used if an access_code is not set. In debug mode,
             // setting them after setting an access code would throw an exception
 
-            charge.setAmount(amount);
-            charge.setEmail(LoginActivity.currentOnlineUser.getEmail());
-            charge.setReference("ChargedFromAndroid" + Calendar.getInstance().getTimeInMillis());
+            charge.setAmount(1000);
+            charge.setEmail("help@paystack.co");
+            charge.setReference("ChargedFromAndroid_" + Calendar.getInstance().getTimeInMillis());
             try {
-                charge.putCustomField("Charged From", LoginActivity.currentOnlineUser.getFirstname());
+                charge.putCustomField("Charged From", "Android SDK");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -261,7 +134,7 @@ public class ConfirmFinalOrder extends AppCompatActivity {
         } else {
             // Perform transaction/initialize on our server to get an access code
             // documentation: https://developers.paystack.co/reference#initialize-a-transaction
-            new ConfirmFinalOrder.fetchAccessCodeFromServer().execute(backend_url + "/new-access-code");
+            new fetchAccessCodeFromServer().execute(backend_url + "/new-access-code");
         }
     }
 
@@ -313,17 +186,17 @@ public class ConfirmFinalOrder extends AppCompatActivity {
 
     private void chargeCard() {
         transaction = null;
-        PaystackSdk.chargeCard(ConfirmFinalOrder.this, charge, new Paystack.TransactionCallback() {
+        PaystackSdk.chargeCard(VendorPaymentActivity.this, charge, new Paystack.TransactionCallback() {
             // This is called only after transaction is successful
             @Override
             public void onSuccess(Transaction transaction) {
                 dismissDialog();
 
-                ConfirmFinalOrder.this.transaction = transaction;
+                VendorPaymentActivity.this.transaction = transaction;
                 //mTextError.setText(" ");
-                Toast.makeText(ConfirmFinalOrder.this, transaction.getReference(), Toast.LENGTH_LONG).show();
+                Toast.makeText(VendorPaymentActivity.this, transaction.getReference(), Toast.LENGTH_LONG).show();
                 updateTextViews();
-                new ConfirmFinalOrder.verifyOnServer().execute(transaction.getReference());
+                new verifyOnServer().execute(transaction.getReference());
             }
 
             // This is called only before requesting OTP
@@ -332,8 +205,8 @@ public class ConfirmFinalOrder extends AppCompatActivity {
             // No need to dismiss dialog
             @Override
             public void beforeValidate(Transaction transaction) {
-                ConfirmFinalOrder.this.transaction = transaction;
-                Toast.makeText(ConfirmFinalOrder.this, transaction.getReference(), Toast.LENGTH_LONG).show();
+                VendorPaymentActivity.this.transaction = transaction;
+                Toast.makeText(VendorPaymentActivity.this, transaction.getReference(), Toast.LENGTH_LONG).show();
                 updateTextViews();
             }
 
@@ -341,21 +214,21 @@ public class ConfirmFinalOrder extends AppCompatActivity {
             public void onError(Throwable error, Transaction transaction) {
                 // If an access code has expired, simply ask your server for a new one
                 // and restart the charge instead of displaying error
-                ConfirmFinalOrder.this.transaction = transaction;
+                VendorPaymentActivity.this.transaction = transaction;
                 if (error instanceof ExpiredAccessCodeException) {
-                    ConfirmFinalOrder.this.startAFreshCharge(false);
-                    ConfirmFinalOrder.this.chargeCard();
+                    VendorPaymentActivity.this.startAFreshCharge(false);
+                    VendorPaymentActivity.this.chargeCard();
                     return;
                 }
 
                 dismissDialog();
 
                 if (transaction.getReference() != null) {
-                    Toast.makeText(ConfirmFinalOrder.this, transaction.getReference() + " concluded with error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(VendorPaymentActivity.this, transaction.getReference() + " concluded with error: " + error.getMessage(), Toast.LENGTH_LONG).show();
                     //mTextError.setText(String.format("%s  concluded with error: %s %s", transaction.getReference(), error.getClass().getSimpleName(), error.getMessage()));
-                    new ConfirmFinalOrder.verifyOnServer().execute(transaction.getReference());
+                    new verifyOnServer().execute(transaction.getReference());
                 } else {
-                    Toast.makeText(ConfirmFinalOrder.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(VendorPaymentActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                     //mTextError.setText(String.format("Error: %s %s", error.getClass().getSimpleName(), error.getMessage()));
                 }
                 updateTextViews();
@@ -372,10 +245,10 @@ public class ConfirmFinalOrder extends AppCompatActivity {
 
     private void updateTextViews() {
         if (transaction.getReference() != null) {
-            Toast.makeText(ConfirmFinalOrder.this, "Payment Successful", Toast.LENGTH_LONG).show();
+            Toast.makeText(VendorPaymentActivity.this, "Reference: %s" + transaction.getReference(), Toast.LENGTH_LONG).show();
             //mTextReference.setText(String.format("Reference: %s" + transaction.getReference()));
         } else {
-            Toast.makeText(ConfirmFinalOrder.this, "No transaction", Toast.LENGTH_LONG).show();
+            Toast.makeText(VendorPaymentActivity.this, "No transaction", Toast.LENGTH_LONG).show();
             //mTextReference.setText("No transaction");
         }
     }
@@ -402,7 +275,7 @@ public class ConfirmFinalOrder extends AppCompatActivity {
                 chargeCard();
             } else {
                 //VendorPaymentActivity.this.mTextBackendMessage.setText(String.format("There was a problem getting a new access code form the backend: %s", error));
-                Toast.makeText(ConfirmFinalOrder.this, "Error occurred, please try again", Toast.LENGTH_LONG).show();
+                Toast.makeText(VendorPaymentActivity.this, "Error occurred, please try again", Toast.LENGTH_LONG).show();
                 dismissDialog();
             }
         }
@@ -434,11 +307,11 @@ public class ConfirmFinalOrder extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             if (result != null) {
-                Toast.makeText(ConfirmFinalOrder.this, "Gateway response: %s" + result, Toast.LENGTH_LONG).show();
+                Toast.makeText(VendorPaymentActivity.this, "Gateway response: %s" + result, Toast.LENGTH_LONG).show();
                 //VendorPaymentActivity.this.mTextBackendMessage.setText(String.format("Gateway response: %s", result));
 
             } else {
-                Toast.makeText(ConfirmFinalOrder.this, "Error encountered, please try again", Toast.LENGTH_LONG).show();
+                Toast.makeText(VendorPaymentActivity.this, "Error encountered, please try again", Toast.LENGTH_LONG).show();
                 //VendorPaymentActivity.this.mTextBackendMessage.setText(String.format("There was a problem verifying %s on the backend: %s ", this.reference, error));
                 dismissDialog();
             }
@@ -464,3 +337,4 @@ public class ConfirmFinalOrder extends AppCompatActivity {
         }
     }
 }
+

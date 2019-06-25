@@ -9,18 +9,21 @@
     android:background="@color/colorPrimary"
     tools:context=".LoginActivity">
 
-    <!--<ProgressBar-->
-        <!--android:id="@+id/progressBar2"-->
-        <!--style="?android:attr/progressBarStyleHorizontal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content" />-->
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="center"
-        app:srcCompat="@drawable/index" />
+        app:srcCompat="@drawable/index"
+    />
 
     <EditText
         android:id="@+id/login_phone"
@@ -33,7 +36,8 @@
         android:inputType="phone"
         android:textAlignment="center"
         android:textColor="@color/brown"
-        android:textColorHint="@color/brown" />
+        android:textColorHint="@color/brown"
+    />
 
     <EditText
         android:id="@+id/login_password"
@@ -45,7 +49,8 @@
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="@color/brown"
-        android:textColorHint="@color/brown" />
+        android:textColorHint="@color/brown"
+    />
 
     <Button
         android:id="@+id/login_button"
@@ -56,7 +61,8 @@
         android:textColor="@color/white"
         android:background="@drawable/button_border"
         android:backgroundTint="@color/colorAccent"
-        android:text="Login" />
+        android:text="Login"
+    />
 
     <com.rey.material.widget.CheckBox
         android:id="@+id/remember"
@@ -65,7 +71,7 @@
         android:text="Remember Me"
         android:textColor="@color/brown"
         android:textSize="16sp"
-        />
+    />
 
     <TextView
         android:id="@+id/forgot_password"
@@ -75,7 +81,8 @@
         android:layout_marginTop="16dp"
         android:text="Forgot password?"
         android:textColor="@color/brown"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+    />
 
     <Button
         android:id="@+id/create_account"
@@ -86,7 +93,8 @@
         android:textColor="@color/white"
         android:background="@drawable/button_border"
         android:backgroundTint="@color/colorAccent"
-        android:text="Create new account" />
+        android:text="Create new account"
+    />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -103,7 +111,8 @@
             android:textColor="@color/brown"
             android:textSize="16sp"
             android:visibility="invisible"
-            tools:visibility="invisible" />
+            tools:visibility="invisible"
+        />
 
         <TextView
             android:id="@+id/admin"
@@ -113,7 +122,8 @@
             android:text="I'm a Vendor?"
             android:textAlignment="viewEnd"
             android:textColor="@color/brown"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+        />
     </LinearLayout>
 
 </LinearLayout>

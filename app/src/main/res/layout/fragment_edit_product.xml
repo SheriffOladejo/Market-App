@@ -9,7 +9,7 @@
     android:layout_marginStart="15dp"
     android:layout_marginEnd="15dp"
     app:cardElevation="15dp"
-    tools:context=".AdminEditProductsActivity">
+    tools:context=".EditProductFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -95,20 +95,6 @@
             android:textColor="@color/white"
             android:layout_below="@id/product_description_edit"
             />
-
-        <Button
-            android:id="@+id/remove"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:text="Remove"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_border"
-            android:backgroundTint="@color/red"
-            android:textColor="@color/white"
-            android:layout_below="@id/apply_changes"
-            />
     </RelativeLayout>
-
 
 </android.support.v7.widget.CardView>

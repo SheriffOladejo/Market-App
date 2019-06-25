@@ -63,7 +63,7 @@ public class BagsActivity extends AppCompatActivity {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                    Intent intent = new Intent(BagsActivity.this, ProductDetailActivity.class);
+                                    Intent intent = new Intent(BagsActivity.this, MainActivity.class);
                                     intent.putExtra("pid", model.getPid());
                                     startActivity(intent);
 

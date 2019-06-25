@@ -1,10 +1,11 @@
 package com.example.newmarket;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,12 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.example.newmarket.Model.Users;
 import com.example.newmarket.Prevalent.Prevalent;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,17 +26,17 @@ import com.rey.material.widget.CheckBox;
 
 import io.paperdb.Paper;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity{
 
     private EditText Phone, Password;
     private Button Login, SignUp;
-    private ProgressDialog progress;
     private String parentDbName = "Users";
     private TextView admin, notAdmin;
     private CheckBox Remember;
     public static Users currentOnlineUser;
     public static Users currentOnlineVendor;
     private LinearLayout linearLayout;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +44,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         Paper.init(this);
+        //replaceFragment(new CategoriesFragment());
         linearLayout = findViewById(R.id.login_linear_layout);
+        progressBar = findViewById(R.id.login_progress);
         Phone = findViewById(R.id.login_phone);
         Password = findViewById(R.id.login_password);
         Login = findViewById(R.id.login_button);
         SignUp = findViewById(R.id.create_account);
-        progress = new ProgressDialog(this);
         admin = findViewById(R.id.admin);
         notAdmin = findViewById(R.id.not_admin);
         Remember = findViewById(R.id.remember);
@@ -60,10 +60,10 @@ public class LoginActivity extends AppCompatActivity {
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (parentDbName == "Users") {
-                    loginUser();
-                } else
-                    loginAdmin();
+            if (parentDbName == "Users") {
+                loginUser();
+            } else
+                loginAdmin();
 
             }
         });
@@ -71,29 +71,29 @@ public class LoginActivity extends AppCompatActivity {
         admin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Login.setText("Login as Vendor");
-                Remember.setVisibility(View.INVISIBLE);
-                admin.setVisibility(View.INVISIBLE);
-                notAdmin.setVisibility(View.VISIBLE);
-                parentDbName = "Admins";
+            Login.setText("Login as Vendor");
+            Remember.setVisibility(View.INVISIBLE);
+            admin.setVisibility(View.INVISIBLE);
+            notAdmin.setVisibility(View.VISIBLE);
+            parentDbName = "Admins";
             }
         });
 
         SignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUp.class));
+            startActivity(new Intent(LoginActivity.this, SignUp.class));
             }
         });
 
         notAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Remember.setVisibility(View.VISIBLE);
-                Login.setText("Login");
-                admin.setVisibility(View.VISIBLE);
-                notAdmin.setVisibility(View.INVISIBLE);
-                parentDbName = "Users";
+            Remember.setVisibility(View.VISIBLE);
+            Login.setText("Login");
+            admin.setVisibility(View.VISIBLE);
+            notAdmin.setVisibility(View.INVISIBLE);
+            parentDbName = "Users";
             }
         });
 
@@ -107,8 +107,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void replaceFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_framelayout, fragment);
+        fragmentTransaction.commit();
+        fragment.onDestroy();
+    }
+
     private void allowAccess(String userPhoneKey) {
-        initDialog(progress);
         DatabaseReference loginRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userPhoneKey);
         loginRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -120,8 +126,9 @@ public class LoginActivity extends AppCompatActivity {
                     currentOnlineUser.setPassword(dataSnapshot.child("Password").getValue().toString());
                     currentOnlineUser.setPhone(dataSnapshot.child("Phone Number").getValue().toString());
                     currentOnlineUser.setLastname(dataSnapshot.child("Surname").getValue().toString());
+                    currentOnlineUser.setAddress(dataSnapshot.child("Address").getValue().toString());
                     currentOnlineUser.setImage(dataSnapshot.child("Profile Image").getValue().toString());
-                    progress.dismiss();
+                    progressBar.setVisibility(View.INVISIBLE);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
@@ -151,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
         if (phone.isEmpty() || password.isEmpty()) {
             useSnackBar("Fields should be filled");
         } else {
-            initDialog(progress);
+            progressBar.setVisibility(View.VISIBLE);
             final DatabaseReference loginRef = FirebaseDatabase.getInstance().getReference().child("Admins").child(phone);
             loginRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -162,12 +169,12 @@ public class LoginActivity extends AppCompatActivity {
                             currentOnlineVendor.setEmail(dataSnapshot.child("Email").getValue().toString());
                             currentOnlineVendor.setFirstname(dataSnapshot.child("Vendor").getValue().toString());
                             currentOnlineVendor.setPhone(dataSnapshot.child("Phone Number").getValue().toString());
-                            progress.dismiss();
-                            startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                            progressBar.setVisibility(View.INVISIBLE);
+                            startActivity(new Intent(LoginActivity.this, VendorActivity.class));
                             finish();
                         } else {
                             useSnackBar("Incorrect Password");
-                            progress.dismiss();
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 }
@@ -181,15 +188,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
-
     private void loginUser() {
         final String phone = Phone.getText().toString().toLowerCase();
         final String password = Password.getText().toString().toLowerCase();
         if (phone.isEmpty() || password.isEmpty()) {
             useSnackBar("Fields should be filled");
         } else {
-            initDialog(progress);
+            progressBar.setVisibility(View.VISIBLE);
+            //initDialog(progress);
             final DatabaseReference loginRef = FirebaseDatabase.getInstance().getReference().child("Users").child(phone);
             loginRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -207,18 +213,18 @@ public class LoginActivity extends AppCompatActivity {
                             if (Remember.isChecked()) {
                                 Paper.book().write(Prevalent.UserPhoneKey, phone);
                                 Paper.book().write(Prevalent.UserPasswordKey, password);
-                                progress.dismiss();
+                                progressBar.setVisibility(View.INVISIBLE);
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
                             }
                             else {
-                            progress.dismiss();
+                            progressBar.setVisibility(View.INVISIBLE);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                             }
                         } else {
                             useSnackBar("Incorrect Password");
-                            progress.dismiss();
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 }
@@ -232,10 +238,4 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void initDialog(ProgressDialog dialog) {
-        dialog.setTitle("Logging in");
-        dialog.setMessage("Logging you in...");
-        dialog.setCancelable(false);
-        dialog.show();
-    }
 }

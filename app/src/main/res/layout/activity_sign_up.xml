@@ -18,6 +18,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <ProgressBar
+                android:id="@+id/sign_up_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible" />
+
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
@@ -54,18 +62,6 @@
                 android:textColorHint="@color/brown" />
 
             <EditText
-                android:id="@+id/nickname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:ems="10"
-                android:hint="Nickname(Optional)"
-                android:inputType="textPersonName"
-                android:textAlignment="center"
-                android:textColor="@color/brown"
-                android:textColorHint="@color/brown" />
-
-            <EditText
                 android:id="@+id/create_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,6 +69,18 @@
                 android:ems="10"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
+                android:textAlignment="center"
+                android:textColor="@color/brown"
+                android:textColorHint="@color/brown" />
+
+            <EditText
+                android:id="@+id/create_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:ems="10"
+                android:hint="Delivery Address"
+                android:inputType="textMultiLine"
                 android:textAlignment="center"
                 android:textColor="@color/brown"
                 android:textColorHint="@color/brown" />

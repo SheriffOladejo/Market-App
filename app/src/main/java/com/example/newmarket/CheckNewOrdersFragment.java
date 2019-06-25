@@ -2,10 +2,10 @@ package com.example.newmarket;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,47 +20,45 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AdminNewOrdersActivity extends AppCompatActivity {
+public class CheckNewOrdersFragment extends Fragment {
 
     private RecyclerView ordersList;
     private DatabaseReference ordersRef;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_new_orders);
-
-        ordersRef = FirebaseDatabase.getInstance().getReference().child("Vendors").child(LoginActivity.currentOnlineVendor.getPhone()).child("Orders");
-        ordersList = findViewById(R.id.orders_list);
-        ordersList.setLayoutManager(new LinearLayoutManager(this));
+    public CheckNewOrdersFragment() {
+        // Required empty public constructor
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_check_new_orders, container, false);
+        ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders");
+        ordersList = view.findViewById(R.id.orders_list);
+        ordersList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ordersList.setHasFixedSize(true);
         FirebaseRecyclerOptions<AdminOrders> options =
-        new FirebaseRecyclerOptions.Builder<AdminOrders>()
-        .setQuery(ordersRef, AdminOrders.class)
-        .build();
+            new FirebaseRecyclerOptions.Builder<AdminOrders>()
+                    .setQuery(ordersRef, AdminOrders.class)
+                    .build();
 
-        FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder> adapter =
-            new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
+        FirebaseRecyclerAdapter<AdminOrders, CheckNewOrdersFragment.AdminOrdersViewHolder> adapter =
+            new FirebaseRecyclerAdapter<AdminOrders, CheckNewOrdersFragment.AdminOrdersViewHolder>(options) {
                 @Override
-                protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
+                protected void onBindViewHolder(@NonNull CheckNewOrdersFragment.AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
                     holder.userName.setText("Name: " + model.getName());
-                    //holder.userPhoneNumber.setText("Phone: " + model.getPhone());
+                    holder.userPhoneNumber.setText("Phone: " + model.getPhone());
                     holder.userTotalPrice.setText("Total Amount: #" + model.getTotal_Amount());
                     holder.userDateTime.setText("Order at: " + model.getDate() + " " + model.getTime());
                     holder.userShippingAddress.setText("Shipping Address: " + model.getAddress());
                     holder.extras.setText("Extras: " + model.getExtras());
-                    final String pid = model.getPID();
 
                     holder.showOrdersbutton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                         String uID = getRef(position).getKey();
-                        Intent intent = new Intent(AdminNewOrdersActivity.this, AdminUserProductsActivity.class);
-                        intent.putExtra("pid", pid);
+                        Intent intent = new Intent(getActivity(), AdminUserProductsActivity.class);
+                        intent.putExtra("uid", uID);
                         startActivity(intent);
                         }
                     });
@@ -72,7 +70,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
                             "Yes",
                             "No"
                         };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(AdminNewOrdersActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setTitle("Has this product been delivered?");
 
                         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -83,7 +81,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
                                 removeOrder(uID);
                             }
                             else{
-                                finish();
+                                getActivity().finish();
                             }
                             }
                         });
@@ -94,16 +92,17 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
 
                 @NonNull
                 @Override
-                public AdminOrdersViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                public CheckNewOrdersFragment.AdminOrdersViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                     View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.orders_layout, viewGroup, false);
-                    return new AdminOrdersViewHolder(view);
+                    return new CheckNewOrdersFragment.AdminOrdersViewHolder(view);
                 }
             };
         ordersList.setAdapter(adapter);
         adapter.startListening();
+        return view;
     }
 
-    public static class AdminOrdersViewHolder extends RecyclerView.ViewHolder {
+    private static class AdminOrdersViewHolder extends RecyclerView.ViewHolder {
 
         public TextView userName, userPhoneNumber, userTotalPrice, userDateTime, userShippingAddress, extras;
         public Button showOrdersbutton;
@@ -124,4 +123,5 @@ public class AdminNewOrdersActivity extends AppCompatActivity {
     private void removeOrder(String uID) {
         ordersRef.child(uID).removeValue();
     }
+
 }

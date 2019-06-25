@@ -102,9 +102,15 @@
                 android:layout_margin="8dp"
                 android:backgroundTint="@color/colorAccent"
                 android:background="@drawable/button_border"
-                android:text="Create Account"
+                android:text="Proceed"
                 android:textColor="@color/white"
                 android:textAllCaps="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="*You'll be required to pay a one-time fee of #1000 to be able to display and sell your products on this platform"/>
         </LinearLayout>
     </ScrollView>
 
